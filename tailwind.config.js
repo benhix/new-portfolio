@@ -1,4 +1,6 @@
 // tailwind.config.js
+const { fontFamily } = require('tailwindcss/defaultTheme');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -31,8 +33,12 @@ module.exports = {
         ring: 'hsl(var(--ring))',
       },
       fontFamily: {
-        sans: ['var(--font-geist-sans)', 'sans-serif'],
-        mono: ['var(--font-geist-mono)', 'monospace'],
+        sans: ['var(--font-geist-sans)', ...fontFamily.sans],
+        mono: ['var(--font-geist-mono)', ...fontFamily.mono],
+        inter: ['var(--font-inter)', ...fontFamily.sans],
+        'space-grotesk': ['var(--font-space-grotesk)', ...fontFamily.sans],
+        heading: ['var(--font-space-grotesk)', 'var(--font-geist-sans)', ...fontFamily.sans],
+        body: ['var(--font-inter)', 'var(--font-geist-sans)', ...fontFamily.sans],
       },
       borderRadius: {
         lg: `var(--radius)`,

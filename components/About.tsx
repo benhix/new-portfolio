@@ -8,12 +8,14 @@ const About = () => {
         <h2 className="text-4xl font-bold text-center mb-12">About Me</h2>
         <div className="max-w-3xl mx-auto">
           <p className="text-lg mb-6">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+          I&apos;m a software engineer based in Adelaide with a strong background in front-end and full-stack web development (React, Next.js, TypeScript). 
+          Recently, I&apos;ve been transitioning into more technical and systems-focused work — including machine learning with Python, real-time data processing in C++, and secure backend tooling. 
+          I&apos;m particularly passionate about software used in high-stakes environments like defence and simulation systems.
+
+
           </p>
           <p className="text-lg">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          I value performance, clarity, and engineering that actually solves problems — and I love learning tools that help me build better systems.
           </p>
           {/* Placeholder for skills or more detailed bio */}
         </div>

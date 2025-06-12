@@ -12,6 +12,7 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "swiper": "^11.2.8",
     "tailwindcss-animate": "^1.0.7",
     "typewriter": "^9.2.0",
     "typewriter-effect": "^2.22.0"
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
