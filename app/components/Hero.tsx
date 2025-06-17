@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Image from "next/image";
-import TypewriterEffect from "./Typewriter"; // Corrected import name to match your file
+import TypewriterEffect from "../../components/Typewriter"; // Corrected import name to match your file
 // Assuming images are directly in the /public folder
 // Replace with actual paths if they are in subdirectories e.g. /images/square.png
 import profileImg from "@/public/square.png";
@@ -35,7 +35,7 @@ const Hero = () => {
 
             <div className="home-text mt-6 md:mt-0 max-w-xl ml-16"> {/* Adjusted margin for consistency and added max-width */}
                 {/* Typewriter component now integrated */}
-                <div className="text-3xl md:text-4xl font-semibold text-primary mb-2 h-12 md:h-14"> {/* Added height to prevent layout shift */}
+                <div className="text-3xl md:text-5xl font-semibold text-primary mb-2 h-12 md:h-14"> {/* Added height to prevent layout shift */}
                     <TypewriterEffect />
                 </div>
 
@@ -44,12 +44,12 @@ const Hero = () => {
                   or styled separately. If it's static, it can remain here.
                   Adjust styling as needed.
                 */}
-                <h1 className="text-4xl md:text-5xl font-bold my-3 text-foreground font-space-grotesk">
+                <h1 className="text-4xl md:text-5xl font-semibold my-3 mb-8 text-foreground font-space-grotesk">
                     Developer <span role="img" aria-label="waving hand">👋🏻</span>
                 </h1>
 
                 <p className="bio text-lg md:text-xl text-muted-foreground max-w-md md:max-w-none mx-auto md:mx-0 mb-6 font-inter">
-                Hi, I'm Ben Hicks — a Software Engineer in Adelaide building fast, reliable systems across web, machine learning, and real-time applications, with a growing focus on defence tech.
+                Hi, I&apos;m Ben Hicks — a Software Engineer in Adelaide building fast, reliable systems across web, machine learning, and real-time applications, with a growing focus on defence tech.
                 </p>
 
                 <div className="flex justify-center md:justify-start items-center space-x-6">

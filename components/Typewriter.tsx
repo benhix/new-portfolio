@@ -1,9 +1,6 @@
 import TypeWriter from 'typewriter-effect';
 
-type Props = {}
-
-const TypewriterEffect = (props: Props) => {
-    const typewriterPause: number = 3000;
+const TypewriterEffect = () => {
 
   return (
     <TypeWriter 

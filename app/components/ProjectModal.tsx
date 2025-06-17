@@ -10,13 +10,7 @@ interface ProjectModalProps {
 }
 
 const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
-  if (!project) {
-    return null;
-  }
-
-  const formattedTechnical = project.technical.replace(/\n/g, '<br/>');
-
-  // Handle Escape key to close modal
+  // Handle Escape key to close modal - Move before early return
   React.useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -29,17 +23,39 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     };
   }, [onClose]);
 
+  if (!project) {
+    return null;
+  }
+
+  // Format technical content with custom header styling
+  const formatTechnicalContent = (content: string) => {
+    return content
+      .split('\n')
+      .map(line => {
+        // Check if line starts with ###
+        if (line.trim().startsWith('### ')) {
+          const headerText = line.trim().substring(4); // Remove "### "
+          return `<h3 class="text-lg font-bold text-foreground first:-mt-8">${headerText}</h3>`;
+        }
+        // Return regular line with break
+        return line.trim() === '' ? '<br/>' : line;
+      })
+      .join('<br/>');
+  };
+
+  const formattedTechnical = formatTechnicalContent(project.technical);
+
   return (
     <div 
       className="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50"
       onClick={onClose} // Close modal when clicking on the backdrop
     >
       <div 
-        className="bg-white dark:bg-gray-900 text-card-foreground rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
+        className="bg-white text-card-foreground rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
       >
         <div className="px-6 py-4 border-b border-border flex justify-between items-center">
-          <h2 className="text-2xl font-bold font-space-grotesk text-foreground">{project.title}</h2>
+          <h2 className="text-2xl text-black font-bold font-space-grotesk text-foreground">{project.title}</h2>
           <button 
             onClick={onClose}
             className="text-muted-foreground hover:text-foreground text-2xl"
@@ -49,7 +65,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
           </button>
         </div>
         <div className="px-6 py-4 overflow-y-auto" style={{ maxHeight: 'calc(90vh - 150px)' }}>
-          <div className="prose prose-sm dark:prose-invert">
+          <div className="text-foreground leading-relaxed">
             <div dangerouslySetInnerHTML={{ __html: formattedTechnical }} />
           </div>
         </div>
