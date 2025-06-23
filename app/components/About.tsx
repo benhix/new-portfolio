@@ -3,19 +3,15 @@ import React from 'react';
 
 const About = () => {
   return (
-    <section id="about" className="py-16 md:py-20">
+    <section id="about" className="py-14">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">About Me</h2>
+        <h2 className="text-3xl font-bold text-center mb-12">About Me</h2>
         <div className="max-w-3xl mx-auto">
-          <p className="text-lg mb-6">
-          I&apos;m a software engineer based in Adelaide with a strong background in front-end and full-stack web development (React, Next.js, TypeScript). 
-          Recently, I&apos;ve been transitioning into more technical and systems-focused work — including machine learning with Python, real-time data processing in C++, and secure backend tooling. 
-          I&apos;m particularly passionate about software used in high-stakes environments like defence and simulation systems.
-
-
+          <p className="text-base mb-6">
+            As a software engineer, I leverage a versatile skill set that spans from high-level web applications to low-level systems programming. My foundation in full-stack development with <strong>React, Next.js, and TypeScript</strong> is complemented by deep experience in <strong>Python</strong> for machine learning and <strong>C++</strong> for real-time data processing. This combination allows me to build robust, end-to-end solutions tailored for performance and reliability.
           </p>
-          <p className="text-lg">
-          I value performance, clarity, and engineering that actually solves problems — and I love learning tools that help me build better systems.
+          <p className="text-base">
+            I am driven by the challenge of creating software for high-stakes environments, particularly in the defence and simulation sectors, where clarity and precision are paramount. I thrive on engineering that solves concrete problems and am constantly expanding my toolkit to build more efficient and resilient systems.
           </p>
           {/* Placeholder for skills or more detailed bio */}
         </div>

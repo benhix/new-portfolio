@@ -7,13 +7,12 @@ import Projects from '@/app/components/Projects';
 
 const Home = () => {
   return (
-    <main className="flex flex-col items-center">
+    <main className="w-full">
       <Hero />
       <About />
       <CaseStudies />
       <Projects />
       {/* Placeholder for a Footer component */}
-      {/* Dark mode toggle will be added later, likely in a Layout component or Navbar */}
     </main>
   );
 };

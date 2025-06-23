@@ -65,7 +65,7 @@ export default function RootLayout({
         {/* Remove the <link> tag from here */}
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${spaceGrotesk.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${spaceGrotesk.variable} antialiased overflow-x-hidden`}
       >
         <ThemeProvider>
           <Header />

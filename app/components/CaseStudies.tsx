@@ -3,7 +3,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { type CaseStudy, allCaseStudies, categories } from '@/data/caseStudyData';
+import { type CaseStudy, allCaseStudies /* categories */ } from '@/data/caseStudyData';
 
 // Timeline step component
 const TimelineStep = ({ 
@@ -23,8 +23,8 @@ const TimelineStep = ({
 }) => {
   return (
     <div className="relative flex">
-      {/* Timeline line and icon */}
-      <div className="flex flex-col items-center mr-6 flex-shrink-0">
+      {/* Timeline line and icon - hidden on mobile */}
+      <div className="hidden md:flex flex-col items-center mr-6 flex-shrink-0">
         <div className={`w-16 h-12 rounded-full flex items-center justify-center transition-all duration-300 ${
           isExpanded 
             ? '' 
@@ -32,6 +32,14 @@ const TimelineStep = ({
         }`}>
           <span className="text-3xl leading-none mt-8">{icon}</span>
         </div>
+        {!isLast && (
+          <div className="w-0.5 bg-gradient-to-b from-primary/30 to-transparent mt-2" style={{minHeight: '60px'}}></div>
+        )}
+      </div>
+
+      {/* Mobile timeline line only */}
+      <div className="hidden flex flex-col items-center flex-shrink-0">
+        <div className="w-4 h-4 rounded-full bg-primary/30 mt-6"></div>
         {!isLast && (
           <div className="w-0.5 bg-gradient-to-b from-primary/30 to-transparent mt-2" style={{minHeight: '60px'}}></div>
         )}
@@ -50,7 +58,11 @@ const TimelineStep = ({
         >
           <div className="p-6">
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xl font-semibold text-card-foreground">{title}</h4>
+              <div className="flex items-center gap-3">
+                {/* Mobile emoji inside dropdown */}
+                <span className="md:hidden text-2xl flex-shrink-0">{icon}</span>
+                <h4 className="text-xl font-semibold text-card-foreground">{title}</h4>
+              </div>
               <div className={`transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`}>
                 <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -213,9 +225,9 @@ const CaseStudyCard = ({
           onToggle();
         }}
       >
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2">
           <h3 className="text-2xl font-semibold text-card-foreground">{caseStudy.title}</h3>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between sm:justify-end space-x-3">
             <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded-full flex-shrink-0">
               {caseStudy.category}
             </span>
@@ -249,17 +261,16 @@ const CaseStudyCard = ({
 };
 
 const CaseStudies = () => {
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  // const [activeCategory, setActiveCategory] = useState<string>('All');
   const [expandedCaseStudy, setExpandedCaseStudy] = useState<string | null>(allCaseStudies[0]?.id || null);
   const [justOpenedCaseStudy, setJustOpenedCaseStudy] = useState<string | null>(null);
   
-  const filteredCaseStudies = activeCategory === 'All' 
-    ? allCaseStudies 
-    : allCaseStudies.filter(study => study.category === activeCategory);
+  // Temporarily showing all case studies without filtering
+  const filteredCaseStudies = allCaseStudies;
 
-  const availableCategories = ['All', ...categories.filter(cat => 
-    allCaseStudies.some(study => study.category === cat)
-  )];
+  // const availableCategories = ['All', ...categories.filter(cat => 
+  //   allCaseStudies.some(study => study.category === cat)
+  // )];
 
   // Create refs for each case study - use useMemo to avoid recreating refs
   const caseStudyRefs = React.useMemo(() => {
@@ -302,15 +313,15 @@ const CaseStudies = () => {
   }, [justOpenedCaseStudy, caseStudyRefs]);
 
   return (
-    <section id="case-studies" className="min-h-screen py-16 md:py-20 bg-background text-foreground">
-      <div className="container mx-auto px-4">
+    <section id="case-studies" className="min-h-screen py-14 bg-background text-foreground w-full">
+      <div className="max-w-7xl mx-auto px-4">
         <h2 className="text-4xl font-bold text-center mb-6 font-space-grotesk">Case Studies</h2>
         <p className="text-center text-muted-foreground mb-12 max-w-3xl mx-auto">
-          Real-world challenges I&apos;ve tackled, showcasing my analytical thinking and systematic approach to automation and efficiency improvements.
+          A selection of engineering challenges I have successfully navigated. Each case study breaks down my process for analysing complex problems, architecting robust solutions, and delivering measurable improvements in automation and efficiency.
         </p>
 
-        {/* Category Filter */}
-        <div className="flex justify-center mb-12 flex-wrap gap-2">
+        {/* Category Filter - Temporarily commented out */}
+        {/* <div className="flex justify-center mb-12 flex-wrap gap-2">
           {availableCategories.map(category => (
             <button
               key={category}
@@ -324,7 +335,7 @@ const CaseStudies = () => {
               {category}
             </button>
           ))}
-        </div>
+        </div> */}
 
         {/* Case Studies */}
         <div className="space-y-8">

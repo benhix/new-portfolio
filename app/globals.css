@@ -75,8 +75,7 @@ body {
 }
 
 .profile-image {
-    width: 30rem; 
-    height: 30rem; /* For a circular container, width and height should be equal */
+    /* Responsive - let Tailwind classes control size on mobile, fixed size on desktop */
     border-radius: 50%; /* Makes it a circle */
     border: 3px solid hsl(var(--foreground)); /* Using themed foreground color for border */
     overflow: hidden; /* Clips the image to the circular border */
@@ -84,9 +83,40 @@ body {
     justify-content: center; 
     align-items: center; 
     animation: squiggly-border 7s infinite alternate;
-    min-width: 30rem; /* Ensures it doesn't shrink below this if flex context changes */
-    margin-left: auto; /* Added to help center if its parent isn't a full flex center */
-    margin-right: auto; /* Added to help center */
+}
+
+/* ADD MOBILE SIZES HERE - between lines 77-84 */
+/* Mobile size - for screens smaller than 640px */
+@media (max-width: 639px) {
+    .profile-image {
+        width: 20rem !important;  /* 192px - adjust this value */
+        height: 20rem !important;
+    }
+}
+
+/* Tablet size - for screens 640px to 768px */
+@media (min-width: 640px) and (max-width: 767px) {
+    .profile-image {
+        width: 14rem !important;  /* 224px - adjust this value */
+        height: 14rem !important;
+    }
+}
+
+/* Medium tablets - 768px to 1023px */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .profile-image {
+        width: 16rem !important;  /* 256px - adjust this value */
+        height: 16rem !important;
+    }
+}
+
+/* Desktop size - apply fixed dimensions only on larger screens */
+@media (min-width: 1024px) {
+    .profile-image {
+        width: 30rem !important; 
+        height: 30rem !important;
+        min-width: 30rem !important;
+    }
 }
 
 /*

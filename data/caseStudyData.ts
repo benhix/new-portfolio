@@ -37,8 +37,8 @@ export const allCaseStudies: CaseStudy[] = [
     title: 'Client Onboarding Portal Automation',
     category: 'Process Automation',
     challenge: {
-      description: 'Manual client onboarding through phone calls and emails taking 1-2 hours per client with around 50+ new clients monthly',
-      impact: 'Staff burnout, client frustration from poorly-timed calls, data collection errors',
+      description: 'Manual client onboarding process requiring 1-2 hours per client via phone and email, for over 50 new clients monthly.',
+      impact: 'High staff burnout, client frustration from disruptive calls, and frequent data entry errors.',
       timeframe: 'Recurring bottleneck affecting 3+ staff members daily'
     },
     analysis: {
@@ -52,14 +52,14 @@ export const allCaseStudies: CaseStudy[] = [
       rootCause: 'No self-service system for clients to submit onboarding information at their convenience'
     },
     decision: {
-      approach: `Build automated client portal with ClickUp API integration and webhook synchronization. Staff use ClickUp heavily so there's minimal new training.`,
+      approach: 'Architected an automated client portal integrated with the ClickUp API, ensuring minimal training for staff already proficient with the tool.',
       alternatives: 'Hire additional staff vs code a completely custom dashboard for the portal vs improve manual process',
-      reasoning: 'Custom portal: shifts burden to clients, integrates with existing ClickUp workflow, scalable solution'
+      reasoning: 'A custom portal was the most scalable solution, shifting the data entry burden to clients and integrating seamlessly into the existing ClickUp workflow.'
     },
     implementation: {
-      solution: 'Next.js client portal with ClickUp API integration, MongoDB storage, webhook automation, and custom URL generation allowing the client to have their own unique portal.',
+      solution: 'Developed a secure Next.js client portal featuring ClickUp API integration, MongoDB for data persistence, webhook-driven automation, and unique, secure URLs for each client.',
       tools: ['Next.js', 'ClickUp API', 'MongoDB', 'Webhooks', 'Redis', 'REST API', 'Typescript', 'Tailwind CSS'],
-      timeline: 'Ongoing development with iterative improvements based on staff and client feedback. Currently v1.0'
+      timeline: 'Initial version developed and deployed, with ongoing iterative improvements based on staff and client feedback.'
     },
     results: {
       metrics: [
@@ -68,10 +68,10 @@ export const allCaseStudies: CaseStudy[] = [
         { label: 'Client Satisfaction', value: 'High', improvement: 'Self-service convenience' }
       ],
       lessons: [
-        'API documentation challenges require patience and experimentation',
-        'Client and staff feedback drives iterative improvements',
-        'Security considerations critical for client-facing portals',
-        'Webhook automation enables seamless workflow integration'
+        'Overcoming API documentation gaps requires patience and experimentation.',
+        'Continuous improvement should be driven by direct feedback from both clients and internal users.',
+        'Robust security measures are non-negotiable for client-facing portals.',
+        'Webhook-based automation is key to enabling seamless, real-time workflow integration.'
       ]
     }
   },
@@ -80,8 +80,8 @@ export const allCaseStudies: CaseStudy[] = [
     title: 'Automated Hourly Reporting System',
     category: 'Process Automation',
     challenge: {
-      description: 'Hourly structured reporting requirements consuming 40+ minutes daily with strict formatting and compliance standards',
-      impact: 'Disrupted deep work flow, reduced coding productivity, high cognitive load from context switching',
+      description: 'Daily requirement to submit hourly, strictly formatted compliance reports, consuming over 40 minutes of development time each day.',
+      impact: 'Constant disruption of deep work, reduced coding productivity, and high cognitive load from frequent context switching.',
       timeframe: 'Daily requirement affecting development work over 12+ months'
     },
     analysis: {
@@ -91,19 +91,19 @@ export const allCaseStudies: CaseStudy[] = [
         'Manual time calculations and overtime justification logic',
         'Context switching disrupted complex problem-solving sessions',
         'High risk of formatting errors affecting compliance',
-        'Mental overhead from setting alarms and tracking schedule manually'
+        'Significant mental overhead required to manually track and meet reporting deadlines.'
       ],
-      rootCause: 'No automation for repetitive compliance tasks that required consistent formatting and time tracking'
+      rootCause: 'Lack of an automated tool to handle a repetitive, time-sensitive, and strictly formatted compliance task.'
     },
     decision: {
-      approach: 'Build custom automation tool with Google Calendar integration and AI-powered note formatting',
+      approach: 'Developed a custom automation tool integrating with the Google Calendar API and leveraging an AI model for intelligent note formatting.',
       alternatives: 'Continue manual process vs use existing time tracking tools vs request policy change',
-      reasoning: 'Custom solution maintains full compliance while eliminating repetitive work and preserving development focus'
+      reasoning: 'A custom tool was the optimal solution to maintain 100% compliance while eliminating repetitive manual work and preserving development focus.'
     },
     implementation: {
-      solution: 'Next.js application with Google Calendar API integration, automated formatting engine, and AI note processing',
+      solution: 'Engineered a Next.js application that fetches calendar data, applies a rule-based formatting engine, and processes unstructured notes into compliant report entries using an AI API.',
       tools: ['Next.js', 'Google Calendar API', 'AI API', 'Client-side Logic', 'Automated Text Processing'],
-      timeline: 'Few hours development in one evening, immediate deployment and daily use'
+      timeline: 'Developed and deployed in a single evening, providing immediate and continuous daily value.'
     },
     results: {
       metrics: [
@@ -112,10 +112,10 @@ export const allCaseStudies: CaseStudy[] = [
         { label: 'Compliance Accuracy', value: '100%', improvement: 'Zero formatting errors' }
       ],
       lessons: [
-        'Automation can maintain compliance while reducing cognitive burden',
-        'AI integration transforms unstructured input into professional output',
-        'Preserving deep work flow significantly improves technical productivity',
-        'Management recognized improved consistency and reliability'
+        'Targeted automation can preserve deep work focus, significantly boosting technical productivity.',
+        'AI integration is highly effective for transforming unstructured user input into structured, professional output.',
+        'Well-designed automation can satisfy stringent compliance requirements while reducing cognitive load.',
+        'Demonstrating improved consistency and reliability can lead to positive management recognition.'
       ]
     }
   }

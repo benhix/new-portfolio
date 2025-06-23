@@ -1,4 +1,4 @@
-// components/Projects.tsx
+/* eslint-disable */
 'use client'; // Add this for components with client-side interactivity like useState
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -17,6 +17,7 @@ import 'swiper/css/pagination';
 // Import Project interface and data
 import { type Project, allProjects } from '@/data/projectData'; // Adjusted import path
 import ProjectModal from './ProjectModal'; // Import the new modal component
+import ImageModal from './ImageModal'; // Import the new image modal component
 
 // Full Page Image component with manual scroll functionality
 const FullPageImage = ({ 
@@ -36,17 +37,37 @@ const FullPageImage = ({
   const calculateMaxScroll = useCallback(() => {
     if (imageRef.current && containerRef.current && isLoaded) {
       const imgHeight = imageRef.current.naturalHeight;
+      const imgWidth = imageRef.current.naturalWidth;
       const containerHeight = containerRef.current.clientHeight;
-      const aspectRatio = imageRef.current.naturalWidth / imgHeight;
-      const displayedHeight = containerRef.current.clientWidth / aspectRatio;
+      const containerWidth = containerRef.current.clientWidth;
+      
+      // Calculate the actual displayed height based on how the image is scaled
+      const aspectRatio = imgWidth / imgHeight;
+      const displayedHeight = containerWidth / aspectRatio;
+      
+      // Only allow scrolling if the image is taller than the container
       const scrollDistance = Math.max(0, displayedHeight - containerHeight);
       setMaxScrollDistance(scrollDistance);
+      
+      // Debug logging
+      console.log('Scroll calculation:', {
+        imgHeight,
+        imgWidth,
+        containerHeight,
+        containerWidth,
+        aspectRatio,
+        displayedHeight,
+        scrollDistance
+      });
     }
   }, [isLoaded]);
 
   useEffect(() => {
     if (isLoaded) {
-      calculateMaxScroll();
+      // Add a small delay to ensure the image is fully rendered
+      setTimeout(() => {
+        calculateMaxScroll();
+      }, 100);
     }
   }, [isLoaded, calculateMaxScroll]);
 
@@ -62,7 +83,8 @@ const FullPageImage = ({
     if (!container) return;
 
     const handleWheelEvent = (e: WheelEvent) => {
-      if (!isHovered || maxScrollDistance === 0) return;
+      // Allow scrolling even without hover for testing
+      if (maxScrollDistance === 0) return;
       
       e.preventDefault();
       e.stopPropagation();
@@ -83,14 +105,16 @@ const FullPageImage = ({
       }
       
       img.style.transform = `translateY(${newY}px)`;
+      
+      console.log('Scroll event:', { currentY, newY, maxScrollDistance, deltaY });
     };
 
     container.addEventListener('wheel', handleWheelEvent, { passive: false });
     return () => container.removeEventListener('wheel', handleWheelEvent);
-  }, [isHovered, maxScrollDistance, hasScrolled]);
+  }, [maxScrollDistance, hasScrolled]); // Removed isHovered dependency
 
   const handleScroll = useCallback((e: React.WheelEvent) => {
-    if (!isHovered || maxScrollDistance === 0) return;
+    if (maxScrollDistance === 0) return;
     
     // Always prevent default to avoid page scrolling
     e.preventDefault();
@@ -112,7 +136,9 @@ const FullPageImage = ({
     }
     
     img.style.transform = `translateY(${newY}px)`;
-  }, [isHovered, maxScrollDistance, hasScrolled]);
+    
+    console.log('React wheel event:', { currentY, newY, maxScrollDistance, deltaY });
+  }, [maxScrollDistance, hasScrolled]);
 
   return (
     <div 
@@ -168,41 +194,78 @@ const FullPageImage = ({
 // Enhanced project card component
 const ProjectCard = ({ 
   project,
-  onShowDetails
+  onShowDetails,
+  onShowImage
 }: { 
   project: Project,
-  onShowDetails: (project: Project) => void // New prop to trigger modal
+  onShowDetails: (project: Project) => void, // New prop to trigger modal
+  onShowImage: (project: Project) => void // New prop to trigger image modal
 }) => {
   const isMobile = project.imageType === 'mobile';
   const isFullpage = project.imageType === 'fullpage';
   
   return (
-    <div className="bg-card rounded-lg shadow-lg overflow-hidden flex flex-col h-full group">
-      <div className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-56'} ${isFullpage ? 'overflow-hidden group cursor-pointer' : ''}`}>
+    <div className="rounded-lg shadow-lg overflow-hidden flex flex-col h-full group">
+      <div 
+        className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group cursor-pointer' : ''} ${project.showImageModal ? 'cursor-pointer group' : ''}`}
+        onClick={project.showImageModal ? () => onShowImage(project) : undefined}
+        title={project.showImageModal ? 'Click to view full size' : undefined}
+      >
         {isMobile ? (
           <div className="relative w-32 h-full">
             <Image 
               src={project.imageUrl || "/placeholder.png"}
               alt={`${project.title} mobile screenshot`}
               fill
-              className="object-contain rounded-lg shadow-md"
+              className={`object-contain rounded-lg shadow-md ${project.showImageModal ? 'group-hover:scale-105 transition-transform duration-300' : ''}`}
             />
+            {/* Click indicator for mobile images */}
+            {project.showImageModal && (
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
+                  <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
+              </div>
+            )}
           </div>
         ) : isFullpage ? (
-          <FullPageImage 
-            src={project.imageUrl || "/placeholder.png"}
-            alt={`${project.title} full page screenshot`}
-          />
+          <div className="relative w-full h-full">
+            <FullPageImage 
+              src={project.imageUrl || "/placeholder.png"}
+              alt={`${project.title} full page screenshot`}
+            />
+            {/* Click indicator for fullpage images */}
+            {project.showImageModal && (
+              <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/70 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                </svg>
+                <span>Full Size</span>
+              </div>
+            )}
+          </div>
         ) : (
-          <Image 
-            src={project.imageUrl || "/placeholder.png"}
-            alt={`${project.title} project screenshot`}
-            fill
-            className="object-cover"
-          />
+          <div className="relative w-full h-full">
+            <Image 
+              src={project.imageUrl || "/placeholder.png"}
+              alt={`${project.title} project screenshot`}
+              fill
+              className={`object-contain sm:object-cover ${project.showImageModal ? 'group-hover:scale-105 transition-transform duration-300' : ''}`}
+            />
+            {/* Click indicator for desktop images */}
+            {project.showImageModal && (
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-3">
+                  <svg className="w-8 h-8 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  </svg>
+                </div>
+              </div>
+            )}
+          </div>
         )}
-        
-
       </div>
       
       <div className="p-6 flex flex-col flex-grow">
@@ -316,6 +379,8 @@ const Projects = () => {
   const [activeTab, setActiveTab] = useState<'JS/TS' | 'Python' | 'C++'>('JS/TS');
   // State to manage the currently selected project for the modal
   const [selectedProjectForModal, setSelectedProjectForModal] = useState<Project | null>(null);
+  // State to manage the currently selected project for the image modal
+  const [selectedProjectForImageModal, setSelectedProjectForImageModal] = useState<Project | null>(null);
   // Add a state to force Swiper re-initialization
   const [swiperKey, setSwiperKey] = useState(0);
 
@@ -333,6 +398,14 @@ const Projects = () => {
 
   const handleCloseModal = () => {
     setSelectedProjectForModal(null);
+  };
+
+  const handleShowImage = (project: Project) => {
+    setSelectedProjectForImageModal(project);
+  };
+
+  const handleCloseImageModal = () => {
+    setSelectedProjectForImageModal(null);
   };
 
   // Dynamic slidesPerView calculation based on number of projects
@@ -362,6 +435,7 @@ const Projects = () => {
                 onClick={() => {
                   setActiveTab(category);
                   handleCloseModal(); // Close modal when changing tabs
+                  handleCloseImageModal(); // Close image modal when changing tabs
                 }}
                 className={`px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-md transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50
                   ${activeTab === category 
@@ -377,14 +451,40 @@ const Projects = () => {
           {filteredProjects.length > 0 ? (
             filteredProjects.length > 1 ? (
               <div className="relative">
+                {/* Navigation Buttons - positioned above the swiper */}
+                <div className="flex justify-center items-center gap-4 mb-8">
+                  <button 
+                    className="swiper-button-prev-custom w-10 h-10 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-all"
+                    onClick={() => {
+                      const swiperEl = document.querySelector('.swiper') as any;
+                      if (swiperEl && swiperEl.swiper) swiperEl.swiper.slidePrev();
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button 
+                    className="swiper-button-next-custom w-10 h-10 bg-primary text-primary-foreground rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-all"
+                    onClick={() => {
+                      const swiperEl = document.querySelector('.swiper') as any;
+                      if (swiperEl && swiperEl.swiper) swiperEl.swiper.slideNext();
+                    }}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+
                 <Swiper
                   key={`${activeTab}-${swiperKey}`}
                   modules={[Navigation, Pagination, A11y]}
                   spaceBetween={30}
                   slidesPerView={getSlidesPerView(filteredProjects.length, 'sm')}
                   navigation={{
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
+                    nextEl: '.swiper-button-next-custom',
+                    prevEl: '.swiper-button-prev-custom',
                   }}
                   pagination={{ 
                     clickable: true,
@@ -419,14 +519,12 @@ const Projects = () => {
                       <ProjectCard 
                         project={project}
                         onShowDetails={handleShowDetails}
+                        onShowImage={handleShowImage}
                       />
                     </SwiperSlide>
                   ))}
                 </Swiper>
-                
-                {/* Custom Navigation Buttons */}
-                <div className="swiper-button-prev !w-10 !h-10 !mt-0 !top-1/2 !-translate-y-1/2 !-left-12 !text-primary !bg-background !rounded-full !shadow-lg !border !border-primary/20 after:!text-sm after:!font-bold"></div>
-                <div className="swiper-button-next !w-10 !h-10 !mt-0 !top-1/2 !-translate-y-1/2 !-right-12 !text-primary !bg-background !rounded-full !shadow-lg !border !border-primary/20 after:!text-sm after:!font-bold"></div>
+
                 
                 {/* Custom Pagination */}
                 <div className="swiper-pagination !bottom-0 !relative !mt-4"></div>
@@ -437,6 +535,7 @@ const Projects = () => {
                 <ProjectCard 
                   project={filteredProjects[0]}
                   onShowDetails={handleShowDetails}
+                  onShowImage={handleShowImage}
                 />
               </div>
             )
@@ -451,6 +550,11 @@ const Projects = () => {
       {/* Render the Modal conditionally */}
       {selectedProjectForModal && (
         <ProjectModal project={selectedProjectForModal} onClose={handleCloseModal} />
+      )}
+
+      {/* Render the Image Modal conditionally */}
+      {selectedProjectForImageModal && (
+        <ImageModal project={selectedProjectForImageModal} onClose={handleCloseImageModal} />
       )}
     </>
   );

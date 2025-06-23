@@ -5,6 +5,7 @@ export interface Project {
   category: 'JS/TS' | 'Python' | 'C++'; // Define the categories
   imageUrl: string;
   imageType?: 'mobile' | 'desktop' | 'fullpage'; // New field to specify screenshot type
+  showImageModal?: boolean; // Optional property to enable image modal feature
   demoUrl?: string; // Optional
   githubUrl?: string; // Optional
   stack: string[];
@@ -20,9 +21,10 @@ export const allProjects: Project[] = [
   { 
     id: 1, 
     title: "E-commerce Store for Subscriptions", 
-    description: "A full-stack e-commerce site built with Next.js, TypeScript, and Stripe integration for seamless online transactions.", 
+    description: "A full-stack e-commerce platform built with Next.js and TypeScript, featuring secure Stripe integration for subscription-based transactions.", 
     category: "JS/TS",
     imageUrl: "/projects/dine-suite-screen.png",
+    showImageModal: true, // Enable image modal for this project
     stack: ['Next.js', 'TypeScript', 'Stripe API', 'Tailwind CSS', 'PostgreSQL', 'Prisma'],
     technical: `
 ### Advanced Security & Middleware Architecture
@@ -33,37 +35,38 @@ The system demonstrates advanced service orchestration with automated document g
 
 ### Database Architecture & Performance
 Built on MongoDB with sophisticated order tracking, the platform implements comprehensive order models with product relationships, tracks processing status to prevent duplicate operations, and provides advanced search and filtering with CSV export capabilities. Deployed on Vercel with custom server configuration, it includes Redis-based rate limiting, geographic content delivery optimization, comprehensive error monitoring, and audit trails with IP address and location tracking for complete order lifecycle management.
-This platform represents a production-ready enterprise solution that successfully handles complex business requirements while maintaining security, performance, and user experience standards. The Xero API integration demonstrates advanced third-party API handling, while the overall architecture showcases modern full-stack development practices with comprehensive automation workflows.
+This platform is a production-ready, enterprise-grade solution that handles complex business requirements while upholding the highest standards of security, performance, and user experience. The architecture demonstrates mastery of modern full-stack development practices, including advanced third-party API integration and comprehensive workflow automation.
     `
   },
   { 
     id: 2, 
     title: "Mandarin Dictionary AI", 
-    description: "A custom dictionary for Mandarin learners with AI-powered character recognition and pronunciation feedback.", 
+    description: "A custom Mandarin dictionary and learning tool featuring AI-powered handwriting recognition and real-time pronunciation analysis.", 
     category: "JS/TS",
     imageUrl: "/mandarin.png", 
     imageType: "fullpage",
+    showImageModal: true, // Enable image modal for this project
     demoUrl: "https://chinese-dictionary.vercel.app/",
     githubUrl: "https://github.com/benhix/Chinese-Dictionary",
     stack: ['React', 'Node.js', 'Express', 'MongoDB', 'TensorFlow.js', 'Pinyin.js'],
     technical: `
-### Core Functionality:
-- Search and browse Mandarin words/phrases.
-- AI model for handwriting recognition of Chinese characters.
-- Real-time pronunciation analysis using Web Audio API and a custom ML model.
-- User accounts for saving vocabulary lists.
+### Project Overview
+This full-stack web application was developed to solve the personal challenge of efficiently learning and organizing Mandarin Chinese vocabulary. It is a self-directed project that demonstrates end-to-end development capabilities, from database design to production deployment, while addressing the unique complexities of multilingual text processing and search functionality.
 
-### Technical Implementation:
-The frontend was built with React for a dynamic user experience. TensorFlow.js allowed for in-browser ML model execution for immediate feedback. The backend handles user data and dictionary content.
+### Technical Architecture
+The application leverages a modern tech stack including Next.js 14 with TypeScript for type-safe development, MongoDB with Mongoose for flexible data modeling, and Tailwind CSS for responsive design. The architecture follows RESTful API principles with organized route handlers, custom React contexts for state management, and reusable component patterns. The codebase demonstrates clean separation of concerns with dedicated models, utilities, and contexts, showcasing scalable application structure.
 
-### Learning & Iteration:
-Developing the ML models for character recognition and pronunciation required significant data collection and iterative training. Optimizing model size for browser performance was crucial.
+### Advanced Search Implementation
+The core technical innovation is an intelligent, real-time search engine that simultaneously queries Chinese characters, Pinyin romanization, and English translations. A key innovation was implementing automatic pinyin normalization using custom utilities that strip diacritical marks, enabling accurate fuzzy matching regardless of tone mark variations. This search functionality required careful regex optimization, database indexing strategies, and client-side debouncing to deliver instantaneous results across three different writing systems.
+
+### Features & Deployment
+Additional features include a comprehensive learning management system with favoriting, learning progress tracking, and category organization. The application includes loading states, confirmation modals, and error handling for a polished user experience. Successfully deployed to Vercel with MongoDB Atlas integration, demonstrating production deployment and cloud database management skills. The project solved a real-world learning challenge while showcasing advanced text processing, database optimization, and modern web development practices.
     `
   },
    { 
     id: 9, 
     title: "Family Hub", 
-    description: "A comprehensive family management platform built with Next.js 14, featuring real-time collaboration, advanced authentication, and mobile-responsive design.", 
+    description: "A real-time family management dashboard built with Next.js 14, featuring collaborative tools, advanced authentication, and a fully-responsive design.", 
     category: "JS/TS",
     imageUrl: "/projects/fam-dash.png", // Placeholder - replace
     imageType: "fullpage", // Specify this as a full page screenshot that can be scrolled
@@ -76,7 +79,7 @@ Developing the ML models for character recognition and pronunciation required si
     },
     technical: `
 ### Core Features
-- Collaborative Shopping Lists with real-time updates, category organization, and optimistic UI updates that provide immediate feedback while syncing with the server.
+- Collaborative Shopping Lists with real-time database synchronization and optimistic UI updates for a seamless user experience.
 - Integrated Calendar System featuring event management, birthday tracking, and dynamic widgets that display upcoming events with live data synchronization.
 - QR Code Integration for pet feeding tracking, implementing camera-based scanning with custom validation and automated data entry workflows.
 - Advanced User Management with customizable preferences, theme switching, and personalized dashboard configurations that persist across sessions.
@@ -95,8 +98,7 @@ Developing the ML models for character recognition and pronunciation required si
 - Production deployment on Vercel with automated CI/CD, environment-specific configurations, and comprehensive error tracking for production monitoring.
 
 ### Technical Highlights
-- This project showcases advanced React patterns including custom hooks, context providers, and server component integration. The authentication system demonstrates sophisticated middleware patterns that handle edge cases gracefully. Database operations feature proper connection management and optimized queries suitable for production environments.
-- The application architecture supports real-time collaboration while maintaining data integrity through optimistic updates and conflict resolution strategies.
+- This project showcases advanced React patterns, including custom hooks, context providers, and server component integration. The architecture supports real-time collaboration via optimistic UI updates and robust data consistency strategies, while the custom authentication middleware demonstrates sophisticated, production-ready access control.
 `
   },
 /*   { 
@@ -124,22 +126,26 @@ Iterative design and development process, focusing on user experience and conten
   { 
     id: 4, 
     title: "Real-Time Face Recognition", 
-    description: "PySide GUI to train the model by adding new users and then run live face recognition", 
+    description: "A desktop application with a PySide6 GUI for training and running a real-time face recognition model using Python, OpenCV, and TensorFlow.", 
     category: "Python",
     imageUrl: "/projects/face_rec_v2.png",
     imageType: "desktop", // Regular desktop screenshot
+    showImageModal: true, // Enable image modal for this project
     demoUrl: "https://py-chatbot-demo.example.com",
     githubUrl: "https://github.com/benhix/Face-Recognition",
     stack: ['Python', 'OpenCV', 'PySide6', 'Shiboken'],
     technical: `
-### Model & Training:
-Utilized a sequence-to-sequence model with LSTMs for intent recognition and response generation. Trained on a custom dataset of conversations. NLTK was used for text preprocessing.
+### Core Architecture & Technology Stack
+This face recognition application represents a complete, end-to-end computer vision pipeline. Built with TensorFlow and OpenCV, the system leverages the state-of-the-art FaceNet architecture for generating high-quality facial embeddings, combined with an SVM classifier that achieves 90% accuracy on a 10-person test dataset. The application demonstrates proficiency in both deep learning model integration and classical machine learning techniques, utilizing MTCNN for accurate face detection and extraction.
 
-### Backend & Deployment:
-Flask API serves the chatbot model. Docker was used for containerization, simplifying deployment and ensuring environment consistency.
+### Automated Training Pipeline & Data Collection
+The system features a comprehensive automated data collection module that streamlines the training process by capturing 30 high-quality face samples per person through real-time camera interaction. This is complemented by a sophisticated training pipeline that processes multi-class datasets, generates 128-dimensional face embeddings using the pre-trained FaceNet model, and trains an optimized SVM classifier with proper train/test split validation. The modular architecture includes a dedicated FACELOADING class for efficient dataset management and preprocessing.
 
-### Future Enhancements:
-Integration with external APIs for richer responses, context awareness over longer conversations, and a more sophisticated NLU pipeline.
+### Real-Time Recognition Performance
+The production-ready real-time recognition system delivers impressive performance with live video processing at 1280x720 resolution, featuring smooth face detection using Haar cascades, real-time embedding generation, and instant classification results. The application maintains high accuracy through proper preprocessing pipelines, including face normalization to 160x160 pixels to match FaceNet's input requirements, and implements robust error handling for unknown faces.
+
+### Software Engineering & Deployment
+The implementation demonstrates strong software engineering principles, including a well-structured and modular codebase, comprehensive dependency management, and efficient model serialization for persistence. The system successfully bridges the gap between a research-grade deep learning model and a practical, real-world application, showcasing expertise in computer vision, ML model deployment, and real-time system optimization.
     `
   },
   /* { 
