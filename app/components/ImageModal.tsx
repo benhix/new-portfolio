@@ -129,6 +129,50 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
     return null;
   }
 
+  // If project has a video, render the video modal
+  if (project.videoUrl) {
+    return (
+      <div 
+        className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50"
+        onClick={onClose}
+      >
+        <div 
+          className="relative w-full h-full max-w-6xl max-h-[90vh] bg-black rounded-lg shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4 z-10">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white truncate pr-4">{project.title}</h2>
+              <button 
+                onClick={onClose}
+                className="text-gray-300 hover:text-white text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors flex-shrink-0"
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+
+          {/* Video Player */}
+          <div className="w-full h-full flex items-center justify-center">
+            <video
+              src={project.videoUrl}
+              className="w-full h-full object-contain"
+              autoPlay
+              loop
+              muted
+              controls
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Otherwise, render the image modal
   return (
     <div 
       className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50"

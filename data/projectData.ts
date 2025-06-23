@@ -4,6 +4,7 @@ export interface Project {
   description: string;
   category: 'JS/TS' | 'Python' | 'C++'; // Define the categories
   imageUrl: string;
+  videoUrl?: string; // Optional URL for project video
   imageType?: 'mobile' | 'desktop' | 'fullpage'; // New field to specify screenshot type
   showImageModal?: boolean; // Optional property to enable image modal feature
   demoUrl?: string; // Optional
@@ -23,7 +24,8 @@ export const allProjects: Project[] = [
     title: "E-commerce Store for Subscriptions", 
     description: "A full-stack e-commerce platform built with Next.js and TypeScript, featuring secure Stripe integration for subscription-based transactions.", 
     category: "JS/TS",
-    imageUrl: "/projects/dine-suite-screen.png",
+    imageUrl: "/projects/dine-suite-new.png",
+    videoUrl: "/videos/projects/sub-shop-demo.mp4", // Video for the modal
     showImageModal: true, // Enable image modal for this project
     stack: ['Next.js', 'TypeScript', 'Stripe API', 'Tailwind CSS', 'PostgreSQL', 'Prisma'],
     technical: `

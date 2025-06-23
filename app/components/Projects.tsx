@@ -203,15 +203,53 @@ const ProjectCard = ({
 }) => {
   const isMobile = project.imageType === 'mobile';
   const isFullpage = project.imageType === 'fullpage';
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
   
   return (
-    <div className="rounded-lg shadow-lg overflow-hidden flex flex-col h-full group">
+    <div className="bg-card rounded-lg shadow-lg overflow-hidden flex flex-col h-full group">
       <div 
-        className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group cursor-pointer' : ''} ${project.showImageModal ? 'cursor-pointer group' : ''}`}
+        className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group' : ''} ${project.showImageModal ? 'cursor-pointer' : ''}`}
         onClick={project.showImageModal ? () => onShowImage(project) : undefined}
-        title={project.showImageModal ? 'Click to view full size' : undefined}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        title={project.showImageModal ? `Click to view ${project.videoUrl ? 'video' : 'full size'}` : undefined}
       >
-        {isMobile ? (
+        {project.videoUrl ? (
+          <div className="relative w-full h-full bg-black">
+            <video
+              ref={videoRef}
+              src={project.videoUrl}
+              loop
+              muted
+              playsInline
+              className="object-cover w-full h-full transition-opacity duration-300 group-hover:opacity-70"
+              poster={project.imageUrl}
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="bg-white/90 rounded-full p-3">
+                <svg className="w-8 h-8 text-gray-800" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+            <div className="absolute top-2 left-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1 pointer-events-none">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span>Video</span>
+            </div>
+          </div>
+        ) : isMobile ? (
           <div className="relative w-32 h-full">
             <Image 
               src={project.imageUrl || "/placeholder.png"}
