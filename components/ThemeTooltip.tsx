@@ -32,7 +32,7 @@ const ThemeTooltip = () => {
     }
   }, []);
 
-  const handleDismiss = () => {
+  const handleDismiss = (): void => {
     // Save dismissal with timestamp to localStorage
     const dismissalData = {
       timestamp: Date.now()
@@ -51,7 +51,7 @@ const ThemeTooltip = () => {
         
         {/* Content */}
         <div className="flex items-center justify-between gap-2">
-          <span className="flex-1">Toggle between themes</span>
+          <span className="md:w-32">Toggle between themes</span>
           <button
             onClick={handleDismiss}
             className="flex-shrink-0 w-4 h-4 flex items-center justify-center hover:bg-primary-foreground/20 rounded-sm transition-colors"
