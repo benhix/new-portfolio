@@ -31,8 +31,20 @@ const FullPageImage = ({
   const [isHovered, setIsHovered] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [maxScrollDistance, setMaxScrollDistance] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [isTouching, setIsTouching] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll position when image changes
+  useEffect(() => {
+    setCurrentY(0);
+    setHasScrolled(false);
+    if (imageRef.current) {
+      imageRef.current.style.transform = 'translateY(0)';
+    }
+  }, [src]);
 
   const calculateMaxScroll = useCallback(() => {
     if (imageRef.current && containerRef.current && isLoaded) {
@@ -48,17 +60,6 @@ const FullPageImage = ({
       // Only allow scrolling if the image is taller than the container
       const scrollDistance = Math.max(0, displayedHeight - containerHeight);
       setMaxScrollDistance(scrollDistance);
-      
-      // Debug logging
-      console.log('Scroll calculation:', {
-        imgHeight,
-        imgWidth,
-        containerHeight,
-        containerWidth,
-        aspectRatio,
-        displayedHeight,
-        scrollDistance
-      });
     }
   }, [isLoaded]);
 
@@ -77,13 +78,12 @@ const FullPageImage = ({
     return () => window.removeEventListener('resize', handleResize);
   }, [calculateMaxScroll]);
 
-  // Add wheel event listener to container for better scroll capture
+  // Mouse wheel events for desktop
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleWheelEvent = (e: WheelEvent) => {
-      // Allow scrolling even without hover for testing
       if (maxScrollDistance === 0) return;
       
       e.preventDefault();
@@ -92,53 +92,74 @@ const FullPageImage = ({
       const img = imageRef.current;
       if (!img) return;
       
-      const currentTransform = img.style.transform;
-      const currentY = currentTransform ? parseFloat(currentTransform.match(/-?\d+\.?\d*/)?.[0] || '0') : 0;
-      
       const scrollSpeed = 30;
       const deltaY = e.deltaY > 0 ? scrollSpeed : -scrollSpeed;
       const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY));
       
-      // Mark as scrolled if position changes from initial (0)
       if (!hasScrolled && newY !== 0) {
         setHasScrolled(true);
       }
       
+      setCurrentY(newY);
       img.style.transform = `translateY(${newY}px)`;
-      
-      console.log('Scroll event:', { currentY, newY, maxScrollDistance, deltaY });
     };
 
     container.addEventListener('wheel', handleWheelEvent, { passive: false });
     return () => container.removeEventListener('wheel', handleWheelEvent);
-  }, [maxScrollDistance, hasScrolled]); // Removed isHovered dependency
+  }, [maxScrollDistance, hasScrolled, currentY]);
+
+  // Touch events for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (maxScrollDistance === 0) return;
+    
+    setIsTouching(true);
+    setTouchStartY(e.touches[0].clientY);
+  }, [maxScrollDistance]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isTouching || maxScrollDistance === 0) return;
+    
+    e.preventDefault();
+    
+    const img = imageRef.current;
+    if (!img) return;
+    
+    const touchY = e.touches[0].clientY;
+    const deltaY = touchStartY - touchY;
+    const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY * 0.5)); // Slower scroll for better control
+    
+    if (!hasScrolled && newY !== 0) {
+      setHasScrolled(true);
+    }
+    
+    setCurrentY(newY);
+    img.style.transform = `translateY(${newY}px)`;
+  }, [isTouching, maxScrollDistance, touchStartY, currentY, hasScrolled]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsTouching(false);
+  }, []);
 
   const handleScroll = useCallback((e: React.WheelEvent) => {
     if (maxScrollDistance === 0) return;
     
-    // Always prevent default to avoid page scrolling
     e.preventDefault();
     e.stopPropagation();
     
     const img = imageRef.current;
     if (!img) return;
     
-    const currentTransform = img.style.transform;
-    const currentY = currentTransform ? parseFloat(currentTransform.match(/-?\d+\.?\d*/)?.[0] || '0') : 0;
-    
     const scrollSpeed = 30;
     const deltaY = e.deltaY > 0 ? scrollSpeed : -scrollSpeed;
     const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY));
     
-    // Mark as scrolled if position changes from initial (0)
     if (!hasScrolled && newY !== 0) {
       setHasScrolled(true);
     }
     
+    setCurrentY(newY);
     img.style.transform = `translateY(${newY}px)`;
-    
-    console.log('React wheel event:', { currentY, newY, maxScrollDistance, deltaY });
-  }, [maxScrollDistance, hasScrolled]);
+  }, [maxScrollDistance, hasScrolled, currentY]);
 
   return (
     <div 
@@ -147,7 +168,10 @@ const FullPageImage = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onWheel={handleScroll}
-      style={{ touchAction: 'none' }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{ touchAction: maxScrollDistance > 0 ? 'none' : 'auto' }}
     >
       <Image
         ref={imageRef}
@@ -222,6 +246,11 @@ const ProjectCard = ({
       <div 
         className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group' : ''} ${project.showImageModal ? 'cursor-pointer' : ''}`}
         onClick={project.showImageModal ? () => onShowImage(project) : undefined}
+        onTouchEnd={project.showImageModal ? (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onShowImage(project);
+        } : undefined}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         title={project.showImageModal ? `Click to view ${project.videoUrl ? 'video' : 'full size'}` : undefined}
@@ -404,6 +433,11 @@ const ProjectCard = ({
 
         <button
           onClick={() => onShowDetails(project)} // Call onShowDetails with the project data
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            onShowDetails(project);
+          }}
           className="text-sm text-accent-foreground hover:underline mt-auto pt-2"
         >
           View Technical Summary

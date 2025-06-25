@@ -63,7 +63,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Remove global smooth scroll - we'll add it selectively to navigation */
 }
 
 body {

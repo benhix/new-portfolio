@@ -15,6 +15,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
   const [hasScrolled, setHasScrolled] = useState(false);
   const [maxScrollDistance, setMaxScrollDistance] = useState(0);
   const [currentScrollY, setCurrentScrollY] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [isTouching, setIsTouching] = useState(false);
   const imageRef = useRef<HTMLImageElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +32,27 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
       window.removeEventListener('keydown', handleEsc);
     };
   }, [onClose]);
+
+  // Prevent body scroll on modal open (iOS fix)
+  useEffect(() => {
+    if (project) {
+      const scrollY = window.scrollY;
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      return () => {
+        document.body.style.overflow = originalStyle;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [project]);
 
   // Reset states when project changes
   useEffect(() => {
@@ -95,7 +118,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
     img.style.transform = `translateY(${newY}px)`;
   }, [maxScrollDistance, hasScrolled, currentScrollY]);
 
-  // Add wheel event listener to container for better scroll capture
+  // Mouse wheel events for desktop
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -125,6 +148,38 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
     return () => container.removeEventListener('wheel', handleWheelEvent);
   }, [maxScrollDistance, hasScrolled, currentScrollY]);
 
+  // Touch events for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (maxScrollDistance === 0) return;
+    
+    setIsTouching(true);
+    setTouchStartY(e.touches[0].clientY);
+  }, [maxScrollDistance]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isTouching || maxScrollDistance === 0) return;
+    
+    e.preventDefault();
+    
+    const img = imageRef.current;
+    if (!img) return;
+    
+    const touchY = e.touches[0].clientY;
+    const deltaY = touchStartY - touchY;
+    const newY = Math.max(-maxScrollDistance, Math.min(0, currentScrollY - deltaY * 0.5));
+    
+    if (!hasScrolled && newY !== 0) {
+      setHasScrolled(true);
+    }
+    
+    setCurrentScrollY(newY);
+    img.style.transform = `translateY(${newY}px)`;
+  }, [isTouching, maxScrollDistance, touchStartY, currentScrollY, hasScrolled]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsTouching(false);
+  }, []);
+
   if (!project) {
     return null;
   }
@@ -135,10 +190,16 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
       <div 
         className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50"
         onClick={onClose}
+        onTouchEnd={(e) => {
+          if (e.target === e.currentTarget) {
+            onClose();
+          }
+        }}
       >
         <div 
           className="relative w-full h-full max-w-6xl max-h-[90vh] bg-black rounded-lg shadow-2xl overflow-hidden"
           onClick={(e) => e.stopPropagation()}
+          onTouchEnd={(e) => e.stopPropagation()}
         >
           {/* Header */}
           <div className="absolute top-0 left-0 right-0 bg-gradient-to-b from-black/50 to-transparent p-4 z-10">
@@ -177,10 +238,16 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
     <div 
       className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50"
       onClick={onClose}
+      onTouchEnd={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div 
         className="relative w-full h-full max-w-6xl max-h-[90vh] bg-white rounded-lg shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
+        onTouchEnd={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="absolute top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200 p-4 z-10">
@@ -203,7 +270,10 @@ const ImageModal: React.FC<ImageModalProps> = ({ project, onClose }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onWheel={handleScroll}
-          style={{ touchAction: 'none' }}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{ touchAction: maxScrollDistance > 0 ? 'none' : 'auto' }}
         >
           <Image
             ref={imageRef}

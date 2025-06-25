@@ -23,6 +23,27 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     };
   }, [onClose]);
 
+  // Prevent body scroll on modal open (iOS fix)
+  React.useEffect(() => {
+    if (project) {
+      const scrollY = window.scrollY;
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      
+      return () => {
+        document.body.style.overflow = originalStyle;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [project]);
+
   if (!project) {
     return null;
   }
@@ -49,10 +70,17 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
     <div 
       className="fixed inset-0 bg-black/75 flex items-center justify-center p-4 z-50"
       onClick={onClose} // Close modal when clicking on the backdrop
+      onTouchEnd={(e) => {
+        // iOS Safari specific fix for backdrop touch
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
     >
       <div 
         className="bg-white text-black rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden"
         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
+        onTouchEnd={(e) => e.stopPropagation()} // iOS fix
       >
         <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-2xl text-black font-bold font-space-grotesk">{project.title}</h2>
