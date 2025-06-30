@@ -352,7 +352,7 @@ const ProjectCard = ({
             ) : (
               <button 
                 disabled 
-                className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-500"
+                className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
               >
                 No Live Demo
               </button>
@@ -424,7 +424,7 @@ const ProjectCard = ({
           ) : (
             <button 
               disabled 
-              className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-500"
+              className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
             >
               Private Code
             </button>
@@ -496,7 +496,7 @@ const Projects = () => {
 
   return (
     <> {/* Use Fragment to return multiple top-level elements */}
-      <section id="projects" className="min-h-screen py-16 md:py-20 bg-background text-foreground">
+      <section id="projects" className="min-h-screen py-14 bg-background text-foreground">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 font-space-grotesk">My Projects</h2>
 

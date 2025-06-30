@@ -100,7 +100,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) => {
         <div className="px-6 py-4 border-t border-gray-200 flex justify-end">
           <button 
             onClick={onClose}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm"
+            className="bg-white text-black px-4 py-2 rounded-md hover:bg-gray-200 border border-black transition-colors text-sm"
           >
             Close
           </button>

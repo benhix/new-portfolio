@@ -50,7 +50,7 @@ This platform is a production-ready, enterprise-grade solution that handles comp
     showImageModal: true, // Enable image modal for this project
     demoUrl: "https://chinese-dictionary.vercel.app/",
     githubUrl: "https://github.com/benhix/Chinese-Dictionary",
-    stack: ['React', 'Node.js', 'Express', 'MongoDB', 'TensorFlow.js', 'Pinyin.js'],
+    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'MongoDB'],
     technical: `
 ### Project Overview
 This full-stack web application was developed to solve the personal challenge of efficiently learning and organizing Mandarin Chinese vocabulary. It is a self-directed project that demonstrates end-to-end development capabilities, from database design to production deployment, while addressing the unique complexities of multilingual text processing and search functionality.
@@ -133,7 +133,6 @@ Iterative design and development process, focusing on user experience and conten
     imageUrl: "/projects/face_rec_v2.png",
     imageType: "desktop", // Regular desktop screenshot
     showImageModal: true, // Enable image modal for this project
-    demoUrl: "https://py-chatbot-demo.example.com",
     githubUrl: "https://github.com/benhix/Face-Recognition",
     stack: ['Python', 'OpenCV', 'PySide6', 'Shiboken'],
     technical: `

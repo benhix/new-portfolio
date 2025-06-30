@@ -14,8 +14,8 @@ import stackImg from "@/public/techstack.png";
 const Hero = () => {
     return (
         // Using <section> for semantics and applying Tailwind for basic layout.
-        <section className="w-full h-full">
-        <section id="hero" className="min-h-screen flex flex-col lg:flex-row justify-center items-center text-center lg:text-left py-10 px-4 lg:space-x-16 max-w-7xl mx-auto">
+        <section className="w-full h-full lg:-mt-10">
+        <section id="hero" className="min-h-screen flex flex-col lg:flex-row justify-center items-center text-center lg:text-left py-14 px-4 lg:space-x-16 max-w-7xl mx-auto">
             {/* This div will have the wobbly border via .profile-image class from globals.css */}
             <div className="profile-image mb-6 lg:mb-0 flex-shrink-0 w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 xl:w-80 xl:h-80 mx-auto">
                 <Image
@@ -38,7 +38,7 @@ const Hero = () => {
                 </h1>
 
                 <p className="bio text-base sm:text-lg lg:text-xl text-muted-foreground max-w-md lg:max-w-none mx-auto lg:mx-0 mb-6 font-inter px-4 lg:px-0">
-                Hi, I&apos;m Ben Hicks — a Software Engineer from Adelaide. I specialize in building fast, reliable systems for <strong>full-stack web applications, machine learning pipelines, and real-time embedded systems</strong>, with a growing focus on defence tech.
+                Hi, I&apos;m Ben Hicks, a Software Engineer from Adelaide. I specialise in building fast, reliable systems for <strong>full-stack web applications, machine learning pipelines, and real-time embedded systems</strong>.{/* , with a growing focus on defence tech. */}
                 </p>
 
                 <div className="flex justify-center lg:justify-start items-center space-x-4 sm:space-x-6">
