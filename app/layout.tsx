@@ -32,6 +32,27 @@ export const metadata: Metadata = {
   title: "Ben Hicks",
   description: "Ben Hicks Portfolio",
   manifest: '/favicon/site.webmanifest',
+  openGraph: {
+    type: 'website',
+    locale: 'en_AU',
+    title: 'Ben Hicks - Software Engineer',
+    description: 'Full-stack web applications, machine learning pipelines, and real-time embedded systems',
+    siteName: 'Ben Hicks',
+    images: [
+      {
+        url: '/og-image.png', // You'll need to create this image
+        width: 1200,
+        height: 630,
+        alt: 'Ben Hicks - Software Engineer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ben Hicks - Software Engineer',
+    description: 'Full-stack web applications, machine learning pipelines, and real-time embedded systems',
+    images: ['/og-image.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon/favicon.ico' },
