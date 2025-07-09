@@ -30,6 +30,12 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: "Ben Hicks",
+  applicationName: "Ben Hicks",
+  appleWebApp: {
+    title: "Ben Hicks",
+    statusBarStyle: "black-translucent",
+    capable: true,
+  },
   description: "Ben Hicks Portfolio",
   manifest: '/favicon/site.webmanifest',
   openGraph: {
