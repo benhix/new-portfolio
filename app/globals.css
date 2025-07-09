@@ -131,14 +131,12 @@ body {
 @keyframes squiggly-border {
   0%, 100% {
     border-radius: 45% 55% 60% 40% / 50% 45% 55% 50%;
-    transform: rotate(0deg);
   }
   25% {
     border-radius: 55% 45% 50% 50% / 45% 50% 50% 55%;
   }
   50% {
     border-radius: 60% 40% 55% 45% / 55% 50% 45% 50%;
-    transform: rotate(3deg);
   }
   75% {
     border-radius: 40% 60% 50% 50% / 50% 55% 45% 50%;

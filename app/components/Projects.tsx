@@ -229,6 +229,9 @@ const ProjectCard = ({
   const isMobile = project.imageType === 'mobile';
   const isFullpage = project.imageType === 'fullpage';
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // State for dropdown functionality
+  const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
 
   const handleMouseEnter = () => {
     if (videoRef.current) {
@@ -346,14 +349,14 @@ const ProjectCard = ({
           <div className="relative group/demo">
             {project.demoUrl ? (
               <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                <button className="border border-primary text-primary px-4 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors text-sm">
+                <button className="border border-primary text-primary text-xs px-4 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors w-28 md:w-32">
                   View Demo
                 </button>
               </Link>
             ) : (
               <button 
                 disabled 
-                className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
+                className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-xs bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 w-28 md:w-32"
               >
                 No Live Demo
               </button>
@@ -420,14 +423,14 @@ const ProjectCard = ({
           {/* GitHub Button - Always shown */}
           {project.githubUrl ? (
             <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-              <button className="border border-primary text-primary px-4 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors text-sm">
+              <button className="border border-primary text-primary text-xs px-4 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors w-28 md:w-32">
                 GitHub
               </button>
             </Link>
           ) : (
             <button 
               disabled 
-              className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400"
+              className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-xs bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 w-28 md:w-32"
             >
               Private Code
             </button>
@@ -437,16 +440,40 @@ const ProjectCard = ({
         {/* Demo Credentials for smaller screens - Only show on sm/md screens if demo URL exists */}
         {project.demoUrl && project.demoCredentials && (
           <div className="flex justify-center mb-4 lg:hidden">
-            <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-3 inline-block">
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-3 inline-block transition-all duration-300 ease-in-out">
               <div className="text-center">
-                <div className="flex items-center justify-center gap-1 mb-2">
-                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243C12.8 9.51 15 9.51 15 7z" />
-                  </svg>
-                  <span className="font-medium text-primary text-sm">Demo Login</span>
+                <div className="flex items-center justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-1">
+                    <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243C12.8 9.51 15 9.51 15 7z" />
+                    </svg>
+                    <span className="font-medium text-primary text-sm">Demo Login</span>
+                  </div>
+                  
+                  {/* Dropdown Arrow */}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsCredentialsOpen(!isCredentialsOpen);
+                    }}
+                    className="text-primary hover:text-primary/70 transition-colors p-1"
+                    title={isCredentialsOpen ? "Hide credentials" : "Show credentials"}
+                  >
+                    <svg 
+                      className={`w-4 h-4 transition-transform duration-300 ${isCredentialsOpen ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
                 </div>
                 
-                <div className="space-y-2">
+                {/* Collapsible credentials content */}
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isCredentialsOpen ? 'max-h-32 opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="space-y-2 pt-1">
                   <div className="flex items-center justify-center gap-2">
                     <span className="text-muted-foreground text-sm">Username:</span>
                     <code className="bg-muted px-2 py-1 rounded text-sm font-mono">{project.demoCredentials.username}</code>
@@ -485,9 +512,10 @@ const ProjectCard = ({
                     </button>
                   </div>
                   
-                  {project.demoCredentials.note && (
-                    <div className="text-muted-foreground text-xs italic mt-1">{project.demoCredentials.note}</div>
-                  )}
+                                        {project.demoCredentials.note && (
+                      <div className="text-muted-foreground text-xs italic mt-1">{project.demoCredentials.note}</div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

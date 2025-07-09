@@ -6,7 +6,7 @@ import Image from "next/image";
 import TypewriterEffect from "../../components/Typewriter"; // Corrected import name to match your file
 // Assuming images are directly in the /public folder
 // Replace with actual paths if they are in subdirectories e.g. /images/square.png
-import profileImg from "@/public/square.png";
+import profileImg from "@/public/hero/cartoon-long-no-bg_v2.png";
 import gitImg from "@/public/github.png";
 import stackImg from "@/public/techstack.png";
 
@@ -23,17 +23,17 @@ const Hero = () => {
                     alt="profile-image"
                     width={300}
                     height={300}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-contain object-center"
                     priority // Add priority if this is your LCP image
                 />
             </div>
 
             <div className="home-text mt-6 lg:mt-0 max-w-xl lg:ml-8"> {/* Reduced margin and made responsive */}
                 {/* Typewriter component now integrated */}
-                <div className="text-3xl sm:text-4xl lg:text-5xl font-semibold my-3 lg:mb-8 text-foreground font-space-grotesk text-primary mb-2 h-10 sm:h-12 lg:h-14"> {/* More responsive sizing and height */}
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-semibold my-3 lg:mb-4 text-foreground font-space-grotesk text-primary mb-2 h-10 sm:h-12 lg:h-14"> {/* More responsive sizing and height */}
                     <TypewriterEffect />
                 </div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold my-3 mb-6 lg:mb-8 text-foreground font-space-grotesk">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold my-3 lg:mb-4 text-foreground font-space-grotesk">
                     Developer <span role="img" aria-label="waving hand">👋🏻</span>
                 </h1>
 

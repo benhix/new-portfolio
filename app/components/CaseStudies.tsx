@@ -57,7 +57,7 @@ const TimelineStep = ({
           }}
         >
           <div className="p-6">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-">
               <div className="flex items-center gap-3">
                 {/* Mobile emoji inside dropdown */}
                 <span className="md:hidden text-2xl flex-shrink-0">{icon}</span>
@@ -219,7 +219,7 @@ const CaseStudyCard = ({
   return (
     <div ref={cardRef} className="bg-background border border-border rounded-lg p-6 shadow-sm w-full max-w-5xl mx-auto">
       <div 
-        className="mb-6 cursor-pointer hover:bg-muted/20 -m-2 p-2 rounded-lg transition-colors"
+        className="md:mb-6 cursor-pointer hover:bg-muted/20 -m-2 p-2 rounded-lg transition-colors"
         onClick={(e) => {
           e.stopPropagation();
           onToggle();
