@@ -45,20 +45,20 @@ const ThemeTooltip = () => {
 
   return (
     <div className="absolute top-full left-0 mt-2 z-60">
-      <div className="relative bg-primary dark:bg-black text-primary-foreground dark:text-white px-3 py-2 rounded-lg shadow-lg dark:border dark:border-white/10 max-w-48 text-sm">
+      <div className="theme-tooltip-container relative border border-border/40 text-foreground px-4 py-3 rounded-lg shadow-xl max-w-52 text-sm mt-4">
         {/* Tooltip Arrow */}
-        <div className="absolute -top-1 left-4 w-2 h-2 bg-primary dark:bg-black rotate-45"></div>
+        <div className="absolute -top-1 left-4 w-2 h-2 bg-background/95 supports-[backdrop-filter]:bg-background/60 rotate-45 border-l border-t border-border/40"></div>
         
         {/* Content */}
-        <div className="flex items-center justify-between gap-2">
-          <span className="md:w-32">Toggle between themes</span>
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-medium">Switch between themes</span>
           <button
             onClick={handleDismiss}
-            className="flex-shrink-0 w-4 h-4 flex items-center justify-center hover:bg-primary-foreground/20 rounded-sm transition-colors"
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center hover:bg-accent hover:text-accent-foreground rounded-full transition-all duration-200 group"
             aria-label="Dismiss tooltip"
           >
-            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>

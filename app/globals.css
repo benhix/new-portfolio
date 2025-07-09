@@ -143,5 +143,16 @@ body {
   }
 }
 
+.theme-tooltip-container {
+  background-color: hsl(var(--background) / 0.95);
+  backdrop-filter: blur(4px);
+}
+
+@supports (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px)) {
+  .theme-tooltip-container {
+    background-color: hsl(var(--background) / 0.90);
+  }
+}
+
 /* A more complex wobbly effect might involve more steps or different properties. */
 /* Search for "CSS wobbly border animation" or "CSS squiggly border animation" for ideas. */
