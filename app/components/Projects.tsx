@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -358,9 +359,9 @@ const ProjectCard = ({
               </button>
             )}
             
-            {/* Demo Credentials Tooltip - Only show if demo URL exists */}
+            {/* Demo Credentials Tooltip - Only show on lg+ screens if demo URL exists */}
             {project.demoUrl && project.demoCredentials && (
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover/demo:opacity-100 hover:opacity-100 transition-opacity duration-300 pointer-events-auto z-10">
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover/demo:opacity-100 hover:opacity-100 transition-opacity duration-300 pointer-events-auto z-10 hidden lg:block">
                 <div className="bg-black/95 dark:bg-white/95 text-white dark:text-black text-xs px-3 py-2 rounded-lg shadow-xl backdrop-blur-sm whitespace-nowrap">
                   <div className="font-medium text-yellow-300 dark:text-yellow-600 mb-1 flex items-center gap-1 justify-center">
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -377,6 +378,7 @@ const ProjectCard = ({
                           e.preventDefault();
                           e.stopPropagation();
                           navigator.clipboard.writeText(project.demoCredentials!.username);
+                          toast.success('📋 Username copied!');
                         }}
                         className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black transition-colors"
                         title="Copy username"
@@ -394,6 +396,7 @@ const ProjectCard = ({
                           e.preventDefault();
                           e.stopPropagation();
                           navigator.clipboard.writeText(project.demoCredentials!.password);
+                          toast.success('📋 Password copied!');
                         }}
                         className="text-gray-300 dark:text-gray-600 hover:text-white dark:hover:text-black transition-colors"
                         title="Copy password"
@@ -430,6 +433,66 @@ const ProjectCard = ({
             </button>
           )}
         </div>
+
+        {/* Demo Credentials for smaller screens - Only show on sm/md screens if demo URL exists */}
+        {project.demoUrl && project.demoCredentials && (
+          <div className="flex justify-center mb-4 lg:hidden">
+            <div className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-3 inline-block">
+              <div className="text-center">
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-3a1 1 0 011-1h2.586l6.243-6.243C12.8 9.51 15 9.51 15 7z" />
+                  </svg>
+                  <span className="font-medium text-primary text-sm">Demo Login</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-muted-foreground text-sm">Username:</span>
+                    <code className="bg-muted px-2 py-1 rounded text-sm font-mono">{project.demoCredentials.username}</code>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(project.demoCredentials!.username);
+                        toast.success('📋 Username copied!');
+                      }}
+                      className="text-muted-foreground hover:text-primary transition-colors p-1"
+                      title="Copy username"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="text-muted-foreground text-sm">Password:</span>
+                    <code className="bg-muted px-2 py-1 rounded text-sm font-mono">{project.demoCredentials.password}</code>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigator.clipboard.writeText(project.demoCredentials!.password);
+                        toast.success('📋 Password copied!');
+                      }}
+                      className="text-muted-foreground hover:text-primary transition-colors p-1"
+                      title="Copy password"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+                  
+                  {project.demoCredentials.note && (
+                    <div className="text-muted-foreground text-xs italic mt-1">{project.demoCredentials.note}</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <button
           onClick={() => onShowDetails(project)} // Call onShowDetails with the project data

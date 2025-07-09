@@ -27,7 +27,7 @@ export const allProjects: Project[] = [
     imageUrl: "/projects/dine-suite-new.png",
     videoUrl: "/videos/projects/sub-shop-demo.mp4", // Video for the modal
     showImageModal: true, // Enable image modal for this project
-    stack: ['Next.js', 'TypeScript', 'Stripe API', 'Tailwind CSS', 'PostgreSQL', 'Prisma'],
+    stack: ['Next.js', 'TypeScript', 'Stripe API', 'Tailwind CSS', 'MongoDB', 'Redis'],
     technical: `
 ### Advanced Security & Middleware Architecture
 The platform implements a comprehensive multi-layered security system through Next.js middleware that handles authentication, rate limiting, and geographic restrictions. The middleware integrates Clerk authentication with custom cookie-based sessions, implements Redis-powered rate limiting using Upstash with different tiers for various endpoints (global limits and stricter Clerk handshake protection), and enforces geographic restrictions limiting access to Australia and New Zealand only. Additionally, it blocks Vercel's default domain access to prevent unauthorized usage, showcasing production-ready security considerations.
@@ -74,7 +74,7 @@ Additional features include a comprehensive learning management system with favo
     imageType: "fullpage", // Specify this as a full page screenshot that can be scrolled
     demoUrl: "https://family-hub-henna.vercel.app/",
     githubUrl: "https://github.com/benhix/family-hub",
-    stack: ['Next.js', 'Tailwind CSS', 'TypeScript', 'REST API'],
+    stack: ['Next.js', 'Tailwind CSS', 'TypeScript', 'REST API', 'MongoDB'],
     demoCredentials: {
       username: "demo",
       password: "DemoUser4785"
@@ -134,7 +134,7 @@ Iterative design and development process, focusing on user experience and conten
     imageType: "desktop", // Regular desktop screenshot
     showImageModal: true, // Enable image modal for this project
     githubUrl: "https://github.com/benhix/Face-Recognition",
-    stack: ['Python', 'OpenCV', 'PySide6', 'Shiboken'],
+    stack: ['Python', 'OpenCV', 'PySide6', 'TensorFlow', 'MTCNN', 'SVM'],
     technical: `
 ### Core Architecture & Technology Stack
 This face recognition application represents a complete, end-to-end computer vision pipeline. Built with TensorFlow and OpenCV, the system leverages the state-of-the-art FaceNet architecture for generating high-quality facial embeddings, combined with an SVM classifier that achieves 90% accuracy on a 10-person test dataset. The application demonstrates proficiency in both deep learning model integration and classical machine learning techniques, utilizing MTCNN for accurate face detection and extraction.

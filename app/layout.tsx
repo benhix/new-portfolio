@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContent";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -97,6 +98,29 @@ export default function RootLayout({
         <ThemeProvider>
           <Header />
           {children}
+          <Toaster 
+              position="top-center"
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                  marginTop: '60px', // Account for header height
+                },
+                success: {
+                  duration: 3000,
+                  style: {
+                    background: '#059669',
+                  },
+                },
+                error: {
+                  duration: 4000,
+                  style: {
+                    background: '#DC2626',
+                  },
+                },
+              }}
+            />
           <ScrollToTop />
         </ThemeProvider>
       </body>
