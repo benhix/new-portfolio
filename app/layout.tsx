@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     siteName: 'Ben Hicks',
     images: [
       {
-        url: '/og-image.png', // You'll need to create this image
+        url: '/og_image.jpg', // You'll need to create this image
         width: 1200,
         height: 630,
         alt: 'Ben Hicks - Software Engineer',
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Ben Hicks - Software Engineer',
     description: 'Full-stack web applications, machine learning pipelines, and real-time embedded systems',
-    images: ['/og-image.png'],
+    images: ['/og_image.jpg'],
   },
   icons: {
     icon: [
