@@ -156,3 +156,23 @@ body {
 
 /* A more complex wobbly effect might involve more steps or different properties. */
 /* Search for "CSS wobbly border animation" or "CSS squiggly border animation" for ideas. */
+
+.section-divider {
+  width: 100%;
+  max-width: 40rem; /* 640px */
+  height: 2px;
+  margin: 3rem auto; /* 48px top/bottom, centered horizontally */
+  background: linear-gradient(to right, transparent, hsl(var(--border)), transparent);
+}
+
+/* Custom modal overlay styling */
+.modal-overlay-blur {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+@supports (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px)) {
+  .modal-overlay-blur {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+}

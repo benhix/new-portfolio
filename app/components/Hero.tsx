@@ -1,7 +1,7 @@
 // components/Hero.tsx
 'use client'
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from "next/image";
 import TypewriterEffect from "../../components/Typewriter"; // Corrected import name to match your file
 // Assuming images are directly in the /public folder
@@ -9,9 +9,13 @@ import TypewriterEffect from "../../components/Typewriter"; // Corrected import 
 import profileImg from "@/public/hero/cartoon-long-no-bg_v2.png";
 import gitImg from "@/public/github.png";
 import stackImg from "@/public/techstack.png";
-
+import { Button } from '@/components/ui/button';
+import { ArrowRightIcon } from 'lucide-react';
+import GetInTouchModal from './GetInTouchModal';
 
 const Hero = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         // Using <section> for semantics and applying Tailwind for basic layout.
         <section className="w-full h-full lg:-mt-10">
@@ -63,6 +67,16 @@ const Hero = () => {
                             className="max-w-full h-auto hover:opacity-80 transition-opacity"
                         />
                     </div>
+                </div>
+                <div className="flex justify-center lg:justify-start mt-6 items-center space-x-4 sm:space-x-6">
+                    <Button 
+                        variant="outline" 
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 md:text-lg"
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        Get in touch <ArrowRightIcon className="w-4 h-4 ml-2" />
+                    </Button>
+                    <GetInTouchModal open={isModalOpen} onOpenChange={setIsModalOpen} />
                 </div>
             </div>
         </section>

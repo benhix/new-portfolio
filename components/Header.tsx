@@ -83,6 +83,12 @@ const Header = () => {
             >
               Projects
             </button>
+            <button 
+              onClick={() => smoothScrollTo('contact')}
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Contact
+            </button>
           </nav>
 
           {/* Mobile Hamburger Menu Button */}
@@ -116,6 +122,12 @@ const Header = () => {
                 className="block w-full text-left px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-all duration-200"
               >
                 Projects
+              </button>
+              <button 
+                onClick={() => smoothScrollTo('contact')}
+                className="block w-full text-left px-3 py-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-accent/50 rounded-md transition-all duration-200"
+              >
+                Contact
               </button>
             </nav>
           </div>
