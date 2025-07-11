@@ -191,9 +191,9 @@ export async function POST(request: NextRequest) {
 
     // Create the email object
     const msg = {
-      to: 'fezwebco@gmail.com', // Your email where you want to receive messages
+      to: 'benhix23@gmail.com', // Your email where you want to receive messages
       from: {
-        email: 'benhicks33@gmail.com', // Must be verified in SendGrid
+        email: 'info@benhix.com', // Must be verified in SendGrid
         name: 'Portfolio Contact Form'
       },
       subject: `New Contact Request from ${name}`,
@@ -383,8 +383,8 @@ export async function POST(request: NextRequest) {
     const thankYouMsg = {
       to: email, // Send to the user who submitted the form
       from: {
-        email: 'fezwebco@gmail.com', // Must be verified in SendGrid
-        name: 'Ben Hicks - Portfolio'
+        email: 'info@benhix.com', // Must be verified in SendGrid
+        name: 'Ben Hicks'
       },
       subject: 'Thank you for your message - I\'ll be in touch soon!',
       html: thankYouEmailContent,
