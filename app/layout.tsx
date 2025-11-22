@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/contexts/ThemeContent";
+import { ModalProvider } from "@/contexts/ModalContext";
 import Header from "@/components/Header";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Toaster } from "react-hot-toast";
@@ -108,32 +109,34 @@ export default function RootLayout({
         </Script>
         
         <ThemeProvider>
-          <Header />
-          {children}
-          <Toaster 
-              position="top-center"
-              toastOptions={{
-                duration: 3000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                  marginTop: '60px', // Account for header height
-                },
-                success: {
+          <ModalProvider>
+            <Header />
+            {children}
+            <Toaster
+                position="top-center"
+                toastOptions={{
                   duration: 3000,
                   style: {
-                    background: '#059669',
+                    background: '#363636',
+                    color: '#fff',
+                    marginTop: '60px', // Account for header height
                   },
-                },
-                error: {
-                  duration: 4000,
-                  style: {
-                    background: '#DC2626',
+                  success: {
+                    duration: 3000,
+                    style: {
+                      background: '#059669',
+                    },
                   },
-                },
-              }}
-            />
-          <ScrollToTop />
+                  error: {
+                    duration: 4000,
+                    style: {
+                      background: '#DC2626',
+                    },
+                  },
+                }}
+              />
+            <ScrollToTop />
+          </ModalProvider>
         </ThemeProvider>
       </body>
     </html>

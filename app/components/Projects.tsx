@@ -5,6 +5,9 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import { useSpring, animated } from '@react-spring/web';
+import { useMove } from '@use-gesture/react';
+import { useModal } from '@/contexts/ModalContext';
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -17,8 +20,204 @@ import 'swiper/css/pagination';
 
 // Import Project interface and data
 import { type Project, allProjects } from '@/data/projectData'; // Adjusted import path
-import ProjectModal from './ProjectModal'; // Import the new modal component
 import ImageModal from './ImageModal'; // Import the new image modal component
+import ProjectModal from './ProjectModal'; // Import the project detail modal
+
+// Mobile Image component with manual scroll functionality
+const MobileImage = ({ 
+  src, 
+  alt, 
+}: { 
+  src: string; 
+  alt: string;  
+}) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
+  const [maxScrollDistance, setMaxScrollDistance] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
+  const [isTouching, setIsTouching] = useState(false);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll position when image changes
+  useEffect(() => {
+    setCurrentY(0);
+    setHasScrolled(false);
+    if (imageRef.current) {
+      imageRef.current.style.transform = 'translateY(0)';
+    }
+  }, [src]);
+
+  const calculateMaxScroll = useCallback(() => {
+    if (imageRef.current && containerRef.current && isLoaded) {
+      const imgHeight = imageRef.current.naturalHeight;
+      const imgWidth = imageRef.current.naturalWidth;
+      const containerHeight = containerRef.current.clientHeight;
+      const containerWidth = containerRef.current.clientWidth;
+      
+      // Calculate the actual displayed height based on how the image is scaled
+      const aspectRatio = imgWidth / imgHeight;
+      const displayedHeight = containerWidth / aspectRatio;
+      
+      // Only allow scrolling if the image is taller than the container
+      const scrollDistance = Math.max(0, displayedHeight - containerHeight);
+      setMaxScrollDistance(scrollDistance);
+    }
+  }, [isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      // Add a small delay to ensure the image is fully rendered
+      setTimeout(() => {
+        calculateMaxScroll();
+      }, 100);
+    }
+  }, [isLoaded, calculateMaxScroll]);
+
+  useEffect(() => {
+    const handleResize = () => calculateMaxScroll();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [calculateMaxScroll]);
+
+  // Mouse wheel events for desktop
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleWheelEvent = (e: WheelEvent) => {
+      if (maxScrollDistance === 0) return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const img = imageRef.current;
+      if (!img) return;
+      
+      const scrollSpeed = 30;
+      const deltaY = e.deltaY > 0 ? scrollSpeed : -scrollSpeed;
+      const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY));
+      
+      if (!hasScrolled && newY !== 0) {
+        setHasScrolled(true);
+      }
+      
+      setCurrentY(newY);
+      img.style.transform = `translateY(${newY}px)`;
+    };
+
+    container.addEventListener('wheel', handleWheelEvent, { passive: false });
+    return () => container.removeEventListener('wheel', handleWheelEvent);
+  }, [maxScrollDistance, hasScrolled, currentY]);
+
+  // Touch events for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (maxScrollDistance === 0) return;
+    
+    setIsTouching(true);
+    setTouchStartY(e.touches[0].clientY);
+  }, [maxScrollDistance]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isTouching || maxScrollDistance === 0) return;
+    
+    e.preventDefault();
+    
+    const img = imageRef.current;
+    if (!img) return;
+    
+    const touchY = e.touches[0].clientY;
+    const deltaY = touchStartY - touchY;
+    const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY * 0.5)); // Slower scroll for better control
+    
+    if (!hasScrolled && newY !== 0) {
+      setHasScrolled(true);
+    }
+    
+    setCurrentY(newY);
+    img.style.transform = `translateY(${newY}px)`;
+  }, [isTouching, maxScrollDistance, touchStartY, currentY, hasScrolled]);
+
+  const handleTouchEnd = useCallback(() => {
+    setIsTouching(false);
+  }, []);
+
+  const handleScroll = useCallback((e: React.WheelEvent) => {
+    if (maxScrollDistance === 0) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const img = imageRef.current;
+    if (!img) return;
+    
+    const scrollSpeed = 30;
+    const deltaY = e.deltaY > 0 ? scrollSpeed : -scrollSpeed;
+    const newY = Math.max(-maxScrollDistance, Math.min(0, currentY - deltaY));
+    
+    if (!hasScrolled && newY !== 0) {
+      setHasScrolled(true);
+    }
+    
+    setCurrentY(newY);
+    img.style.transform = `translateY(${newY}px)`;
+  }, [maxScrollDistance, hasScrolled, currentY]);
+
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full h-full overflow-hidden group bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onWheel={handleScroll}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{ touchAction: maxScrollDistance > 0 ? 'none' : 'auto' }}
+    >
+      <Image
+        ref={imageRef}
+        src={src}
+        alt={alt}
+        width={800}
+        height={1200}
+        className="object-cover object-top w-full transition-transform duration-200 ease-out"
+        style={{
+          height: 'auto',
+          minHeight: '100%',
+          transform: 'translateY(0)',
+        }}
+        onLoad={() => setIsLoaded(true)}
+      />
+      
+      {/* Loading indicator */}
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      )}
+      
+      {/* Scroll indicator - hide once scrolling has begun */}
+      {isLoaded && maxScrollDistance > 0 && !hasScrolled && (
+        <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+          </svg>
+          <span>Scroll</span>
+        </div>
+      )}
+      
+      {/* Hover instruction */}
+      <div className={`absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
+        <p className="text-white text-xs text-center font-medium">
+          {maxScrollDistance > 0 ? '🖱️ Scroll to explore the full page' : 'Full page visible'}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 // Full Page Image component with manual scroll functionality
 const FullPageImage = ({ 
@@ -219,12 +418,12 @@ const FullPageImage = ({
 // Enhanced project card component
 const ProjectCard = ({ 
   project,
-  onShowDetails,
-  onShowImage
+  onShowImage,
+  onShowProjectModal
 }: { 
   project: Project,
-  onShowDetails: (project: Project) => void, // New prop to trigger modal
   onShowImage: (project: Project) => void // New prop to trigger image modal
+  onShowProjectModal: (project: Project) => void // New prop to trigger project detail modal
 }) => {
   const isMobile = project.imageType === 'mobile';
   const isFullpage = project.imageType === 'fullpage';
@@ -232,6 +431,33 @@ const ProjectCard = ({
   
   // State for dropdown functionality
   const [isCredentialsOpen, setIsCredentialsOpen] = useState(false);
+
+  // Magnetic hover effect
+  const [{ x, y }, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    config: { mass: 0.5, tension: 400, friction: 30 }
+  }));
+
+  const bind = useMove(({ xy: [px, py], hovering }) => {
+    if (hovering) {
+      // Get the card's bounding rectangle
+      const cardElement = document.querySelector(`[data-project-id="${project.id}"]`);
+      if (cardElement) {
+        const rect = cardElement.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        // Calculate magnetic pull (reduced strength for subtle effect)
+        const pullX = (px - centerX) * 0.05;
+        const pullY = (py - centerY) * 0.05;
+
+        api.start({ x: pullX, y: pullY });
+      }
+    } else {
+      api.start({ x: 0, y: 0 });
+    }
+  });
 
   const handleMouseEnter = () => {
     if (videoRef.current) {
@@ -244,20 +470,71 @@ const ProjectCard = ({
       videoRef.current.pause();
     }
   };
+
+  // Handle card click to open project modal
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Don't open modal if clicking on buttons, links, or interactive elements
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('button') ||
+      target.closest('a') ||
+      target.closest('[role="button"]') ||
+      target.closest('.swiper-button-prev-custom') ||
+      target.closest('.swiper-button-next-custom')
+    ) {
+      return;
+    }
+    
+    // Add transition effect
+    const card = e.currentTarget as HTMLElement;
+    card.style.transform = 'scale(0.98)';
+    card.style.transition = 'transform 0.2s ease-out';
+    
+    setTimeout(() => {
+      onShowProjectModal(project);
+    }, 150);
+  };
+
+  const handleCardTouchEnd = (e: React.TouchEvent) => {
+    // Similar logic for touch events
+    const target = e.target as HTMLElement;
+    if (
+      target.closest('button') ||
+      target.closest('a') ||
+      target.closest('[role="button"]')
+    ) {
+      return;
+    }
+    
+    onShowProjectModal(project);
+  };
   
   return (
-    <div className="bg-card rounded-lg shadow-lg overflow-hidden flex flex-col h-full group">
+    <animated.div
+      {...bind()}
+      style={{ x, y }}
+      data-project-id={project.id}
+      className="transform-gpu"
+    >
+      <div
+        className="bg-card rounded-lg shadow-lg overflow-hidden flex flex-col h-full group cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+        onClick={handleCardClick}
+        onTouchEnd={handleCardTouchEnd}
+      >
       <div 
-        className={`w-full relative ${isMobile ? 'h-64 flex justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group' : ''} ${project.showImageModal ? 'cursor-pointer' : ''}`}
-        onClick={project.showImageModal ? () => onShowImage(project) : undefined}
+        className={`w-full relative ${isMobile ? 'h-[356px] flex justify-center bg-transparent overflow-hidden group' : 'h-48 sm:h-56'} ${isFullpage ? 'overflow-hidden group' : ''} ${project.showImageModal ? 'cursor-pointer' : ''}`}
+        onClick={project.showImageModal ? (e) => {
+          e.stopPropagation();
+          onShowProjectModal(project);
+        } : undefined}
         onTouchEnd={project.showImageModal ? (e) => {
           e.preventDefault();
           e.stopPropagation();
-          onShowImage(project);
+          onShowProjectModal(project);
         } : undefined}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        title={project.showImageModal ? `Click to view ${project.videoUrl ? 'video' : 'full size'}` : undefined}
+        title={project.showImageModal ? `Click to view ${project.videoUrl ? 'video' : 'project details'}` : undefined}
       >
         {project.videoUrl ? (
           <div className="relative w-full h-full bg-black">
@@ -282,38 +559,19 @@ const ProjectCard = ({
               <span>Video</span>
             </div>
           </div>
-        ) : isMobile ? (
-          <div className="relative w-32 h-full">
-            <Image 
-              src={project.imageUrl || "/placeholder.png"}
-              alt={`${project.title} mobile screenshot`}
-              fill
-              className={`object-contain rounded-lg shadow-md ${project.showImageModal ? 'group-hover:scale-105 transition-transform duration-300' : ''}`}
-            />
-            {/* Click indicator for mobile images */}
-            {project.showImageModal && (
-              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-lg flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 rounded-full p-2">
-                  <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                  </svg>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : isFullpage ? (
+        ) : (isMobile || isFullpage) ? (
           <div className="relative w-full h-full">
-            <FullPageImage 
+            <FullPageImage
               src={project.imageUrl || "/placeholder.png"}
-              alt={`${project.title} full page screenshot`}
+              alt={`${project.title} ${isMobile ? 'mobile' : 'full page'} screenshot`}
             />
-            {/* Click indicator for fullpage images */}
+            {/* Click indicator for images */}
             {project.showImageModal && (
               <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/70 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>Full Size</span>
+                <span>View Details</span>
               </div>
             )}
           </div>
@@ -341,7 +599,7 @@ const ProjectCard = ({
       
       <div className="p-6 flex flex-col flex-grow">
         <h3 className="text-2xl font-semibold mb-2 text-card-foreground">{project.title}</h3>
-        <p className="text-sm text-muted-foreground mb-3">Tech Stack: {project.stack.join(' • ')}</p>
+        <p className="text-sm text-muted-foreground mb-3">Stack: {project.stack.join(' • ')}</p>
         <p className="text-muted-foreground mb-4 flex-grow">{project.description}</p>
         
         <div className="flex justify-center gap-4 mb-4">
@@ -350,7 +608,7 @@ const ProjectCard = ({
             {project.demoUrl ? (
               <Link href={project.demoUrl} target="_blank" rel="noopener noreferrer">
                 <button className="border border-primary text-primary text-xs px-4 py-2 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors w-28 md:w-32">
-                  View Demo
+                  View Site
                 </button>
               </Link>
             ) : (
@@ -358,7 +616,7 @@ const ProjectCard = ({
                 disabled 
                 className="border border-gray-300 text-gray-400 px-4 py-2 rounded-md cursor-not-allowed text-xs bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400 w-28 md:w-32"
               >
-                No Live Demo
+                No Live Site
               </button>
             )}
             
@@ -522,53 +780,41 @@ const ProjectCard = ({
           </div>
         )}
 
-        <button
-          onClick={() => onShowDetails(project)} // Call onShowDetails with the project data
-          onTouchEnd={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            onShowDetails(project);
-          }}
-          className="text-sm text-accent-foreground hover:underline mt-auto pt-2"
-        >
-          View Technical Summary
-        </button>
+        <div className="mt-auto pt-2">
+          <span className="text-sm text-accent-foreground group-hover:text-primary transition-colors inline-flex items-center gap-1">
+            View Details
+            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
       </div>
     </div>
+    </animated.div>
   );
 };
 
 const Projects = () => {
-  const [activeTab, setActiveTab] = useState<'JS/TS' | 'Python' | 'C++'>('JS/TS');
-  // State to manage the currently selected project for the modal
-  const [selectedProjectForModal, setSelectedProjectForModal] = useState<Project | null>(null);
-  // State to manage the currently selected project for the image modal
-  const [selectedProjectForImageModal, setSelectedProjectForImageModal] = useState<Project | null>(null);
+  const [activeTab, setActiveTab] = useState<'JS/TS' | 'Python' | 'C++' | 'Swift'>('JS/TS');
   // Add a state to force Swiper re-initialization
   const [swiperKey, setSwiperKey] = useState(0);
+  // Use global modal context
+  const { openProjectModal, openImageModal } = useModal();
 
   const filteredProjects = allProjects.filter(project => project.category === activeTab);
-  const categories: ('JS/TS' | 'Python')[] = ['JS/TS', 'Python'];
+  const categories: ('JS/TS' | 'Python' | 'Swift')[] = ['JS/TS', 'Python', 'Swift'];
 
   // Effect to force Swiper re-initialization when tab changes
   useEffect(() => {
     setSwiperKey(prev => prev + 1);
   }, [activeTab, filteredProjects.length]);
 
-  const handleShowDetails = (project: Project) => {
-    setSelectedProjectForModal(project);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProjectForModal(null);
-  };
-
   const handleShowImage = (project: Project) => {
-    setSelectedProjectForImageModal(project);
+    openImageModal(project);
   };
 
-  const handleCloseImageModal = () => {
-    setSelectedProjectForImageModal(null);
+  const handleShowProjectModal = (project: Project) => {
+    openProjectModal(project);
   };
 
   // Dynamic slidesPerView calculation based on number of projects
@@ -597,8 +843,6 @@ const Projects = () => {
                 key={category}
                 onClick={() => {
                   setActiveTab(category);
-                  handleCloseModal(); // Close modal when changing tabs
-                  handleCloseImageModal(); // Close image modal when changing tabs
                 }}
                 className={`px-4 py-2 md:px-6 md:py-3 text-sm md:text-base font-medium rounded-md transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50
                   ${activeTab === category 
@@ -681,8 +925,8 @@ const Projects = () => {
                     <SwiperSlide key={project.id} className="h-auto pb-2">
                       <ProjectCard 
                         project={project}
-                        onShowDetails={handleShowDetails}
                         onShowImage={handleShowImage}
+                        onShowProjectModal={handleShowProjectModal}
                       />
                     </SwiperSlide>
                   ))}
@@ -697,8 +941,8 @@ const Projects = () => {
               <div className="max-w-2xl mx-auto">
                 <ProjectCard 
                   project={filteredProjects[0]}
-                  onShowDetails={handleShowDetails}
                   onShowImage={handleShowImage}
+                  onShowProjectModal={handleShowProjectModal}
                 />
               </div>
             )
@@ -709,16 +953,6 @@ const Projects = () => {
           )}
         </div>
       </section>
-
-      {/* Render the Modal conditionally */}
-      {selectedProjectForModal && (
-        <ProjectModal project={selectedProjectForModal} onClose={handleCloseModal} />
-      )}
-
-      {/* Render the Image Modal conditionally */}
-      {selectedProjectForImageModal && (
-        <ImageModal project={selectedProjectForImageModal} onClose={handleCloseImageModal} />
-      )}
     </>
   );
 };

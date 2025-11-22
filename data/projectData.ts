@@ -2,8 +2,9 @@ export interface Project {
   id: number;
   title: string;
   description: string;
-  category: 'JS/TS' | 'Python' | 'C++'; // Define the categories
+  category: 'JS/TS' | 'Python' | 'C++' | 'Swift'; // Define the categories
   imageUrl: string;
+  images?: string[]; // Array of image URLs for carousel
   videoUrl?: string; // Optional URL for project video
   imageType?: 'mobile' | 'desktop' | 'fullpage'; // New field to specify screenshot type
   showImageModal?: boolean; // Optional property to enable image modal feature
@@ -18,15 +19,29 @@ export interface Project {
   };
 }
 
+// Utility function to generate URL-friendly slug from title
+export function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+// Helper function to get project by slug
+export function getProjectBySlug(slug: string): Project | undefined {
+  return allProjects.find(project => generateSlug(project.title) === slug);
+}
+
 export const allProjects: Project[] = [
+  // ==================== E-commerce Store for Subscriptions ====================
   { 
     id: 1, 
     title: "E-commerce Store for Subscriptions", 
     description: "A full-stack e-commerce platform built with Next.js and TypeScript, featuring secure Stripe integration for subscription-based transactions.", 
     category: "JS/TS",
     imageUrl: "/projects/dine-suite-new.png",
-    videoUrl: "/videos/projects/sub-shop-demo.mp4", // Video for the modal
-    showImageModal: true, // Enable image modal for this project
+    videoUrl: "/videos/projects/sub-shop-demo.mp4",
+    showImageModal: true,
     stack: ['Next.js', 'TypeScript', 'Stripe API', 'Tailwind CSS', 'MongoDB', 'Redis'],
     technical: `
 ### Advanced Security & Middleware Architecture
@@ -40,6 +55,7 @@ Built on MongoDB with sophisticated order tracking, the platform implements comp
 This platform is a production-ready, enterprise-grade solution that handles complex business requirements while upholding the highest standards of security, performance, and user experience. The architecture demonstrates mastery of modern full-stack development practices, including advanced third-party API integration and comprehensive workflow automation.
     `
   },
+  // ==================== Mandarin Dictionary AI ====================
   { 
     id: 2, 
     title: "Mandarin Dictionary AI", 
@@ -47,7 +63,7 @@ This platform is a production-ready, enterprise-grade solution that handles comp
     category: "JS/TS",
     imageUrl: "/mandarin.png", 
     imageType: "fullpage",
-    showImageModal: true, // Enable image modal for this project
+    showImageModal: true,
     demoUrl: "https://chinese-dictionary.vercel.app/",
     githubUrl: "https://github.com/benhix/Chinese-Dictionary",
     stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'MongoDB'],
@@ -65,74 +81,47 @@ The core technical innovation is an intelligent, real-time search engine that si
 Additional features include a comprehensive learning management system with favoriting, learning progress tracking, and category organization. The application includes loading states, confirmation modals, and error handling for a polished user experience. Successfully deployed to Vercel with MongoDB Atlas integration, demonstrating production deployment and cloud database management skills. The project solved a real-world learning challenge while showcasing advanced text processing, database optimization, and modern web development practices.
     `
   },
+  // ==================== Family Hub ====================
    { 
     id: 9, 
     title: "Family Hub", 
-    description: "A real-time family management dashboard built with Next.js 14, featuring collaborative tools, advanced authentication, and a fully-responsive design.", 
-    category: "JS/TS",
-    imageUrl: "/projects/fam-dash.png", // Placeholder - replace
-    imageType: "fullpage", // Specify this as a full page screenshot that can be scrolled
-    demoUrl: "https://family-hub-henna.vercel.app/",
-    githubUrl: "https://github.com/benhix/family-hub",
-    stack: ['Next.js', 'Tailwind CSS', 'TypeScript', 'REST API', 'MongoDB'],
-    demoCredentials: {
-      username: "demo",
-      password: "DemoUser4785"
-    },
+    description: "A real-time family management dashboard built with SwiftUI. Users can create family groups and share a calendar, shopping list, meal planning, and more. ", 
+    category: "Swift",
+    imageUrl: "/projects/family-hub/home.png",
+    imageType: "mobile", 
+    showImageModal: true, 
+    images: [
+      "/projects/family-hub/home.png",
+      "/projects/family-hub/account.png",
+      "/projects/family-hub/calendar.png",
+      "/projects/family-hub/dinner.png",
+      "/projects/family-hub/shopping.png",
+    ],
+    stack: ['SwiftUI', 'Swift', 'Firebase'],
     technical: `
-### Core Features
-- Collaborative Shopping Lists with real-time database synchronization and optimistic UI updates for a seamless user experience.
-- Integrated Calendar System featuring event management, birthday tracking, and dynamic widgets that display upcoming events with live data synchronization.
-- QR Code Integration for pet feeding tracking, implementing camera-based scanning with custom validation and automated data entry workflows.
-- Advanced User Management with customizable preferences, theme switching, and personalized dashboard configurations that persist across sessions.
-- Activity Logging System providing comprehensive user analytics and interaction tracking with detailed audit trails.
+### Core Architecture & Technology Stack
+Family Hub is a comprehensive family management platform built with SwiftUI and Firebase, implementing a multi-user architecture for seamless family collaboration. The application leverages Firebase's Firestore for real-time data synchronization, Firebase Authentication for secure user management, and Firebase Storage for image handling. The system features a family-based data model where users create or join family groups through unique alphanumeric family IDs, enabling automatic data sharing across all family members.
 
-### Technical Architecture
-- Built on Next.js 14 with the App Router, leveraging server-side rendering and React Server Components for optimal performance. The frontend uses TypeScript throughout with custom type definitions and interfaces for complete type safety.
-- Custom Authentication Middleware implements route-level protection with graceful error handling, avoiding common "Failed to fetch" issues through proper API response patterns. The authentication system uses Clerk with custom helper functions that provide reusable auth patterns across all API routes.
-- MongoDB Integration features optimized connection pooling, custom document schemas, and efficient query patterns with proper indexing strategies.
-- Advanced State Management combines React Context API with custom hooks for global state, implementing optimistic updates that immediately reflect user actions while maintaining data consistency.
-- Responsive Design System built with Tailwind CSS, featuring mobile-first architecture and adaptive layouts that work seamlessly across all device sizes.
 
-### Development Excellence
-- The codebase demonstrates separation of concerns with reusable components, custom hooks for business logic abstraction, and proper error boundaries. API routes implement consistent response patterns with comprehensive input validation and sanitization.
-- Performance optimizations include code splitting, lazy loading, and efficient caching strategies. The application features progressive web app capabilities with offline functionality and installable interfaces.
-- Production deployment on Vercel with automated CI/CD, environment-specific configurations, and comprehensive error tracking for production monitoring.
+### Family-Centric Data Architecture & Real-Time Collaboration
+The core data architecture centers on family groups, with each family maintaining a centralized Firestore document containing shared calendar events, shopping lists, dinner plans, and meal schedules. Users can create new families or join existing ones during registration, with support for legacy user migration. The real-time synchronization ensures instant updates across devices when any family member adds items, creates events, or modifies plans. User preferences include profile images, nicknames, and notification settings for personalized experiences.
 
-### Technical Highlights
-- This project showcases advanced React patterns, including custom hooks, context providers, and server component integration. The architecture supports real-time collaboration via optimistic UI updates and robust data consistency strategies, while the custom authentication middleware demonstrates sophisticated, production-ready access control.
+### Multi-Feature Dashboard with Interactive Widgets
+The home screen provides a widget-based dashboard featuring calendar events, shopping lists, and dinner planning insights. The calendar widget displays upcoming events, birthdays, and reminders with customizable view counts (3, 5, or 10 items) and filtering options. Shopping widgets show active lists organized by category (Grocery, Fruits & Vegetables) with priority levels and completion tracking. Dinner widgets provide meal planning overviews. Each widget supports direct navigation, inline editing, and real-time refresh functionality.
+
+### Comprehensive Feature Set & Production Architecture
+The application includes four main feature modules: Calendar (with event categories, birthdays, and reminders), Shopping (with categories, priorities, and collaborative lists), Dinner Planning (with recipe libraries and weekly meal scheduling), and Home Dashboard. The calendar supports rich event metadata including locations, attendees, and color coding. Shopping lists feature image attachments, notes, and multiple view modes. Dinner planning includes drag-and-drop weekly scheduling with proposal locking. The codebase demonstrates strong engineering with modular services, comprehensive error handling, Adelaide timezone utilities, and robust authentication flows supporting family management and user preferences.
 `
   },
-/*   { 
-    id: 3, 
-    title: "Portfolio Website v2", 
-    description: "This very portfolio, showcasing projects and skills, built with Next.js and Tailwind CSS for a modern, responsive design.", 
-    category: "JS/TS",
-    imageUrl: "/project-images/portfolio.jpg",
-    demoUrl: "/", // Link to current site
-    githubUrl: "https://github.com/user/portfolio-nextjs",
-    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Vercel', 'Framer Motion'],
-    technical: `
-### Design Goals:
-- Clean, modern, and performant.
-- Easy to navigate and update.
-- Effectively showcase technical projects and skills.
-
-### Technologies Used:
-Next.js App Router for structure and optimized page loading. Tailwind CSS for rapid UI development. Framer Motion for subtle animations. Deployed on Vercel for CI/CD and global CDN.
-
-### Process:
-Iterative design and development process, focusing on user experience and content clarity. Implemented dark mode and responsive layouts for various devices.
-    `
-  }, */
+  // ==================== Real-Time Face Recognition ====================
   { 
     id: 4, 
     title: "Real-Time Face Recognition", 
     description: "A desktop application with a PySide6 GUI for training and running a real-time face recognition model using Python, OpenCV, and TensorFlow.", 
     category: "Python",
     imageUrl: "/projects/face_rec_v2.png",
-    imageType: "desktop", // Regular desktop screenshot
-    showImageModal: true, // Enable image modal for this project
+    imageType: "desktop", 
+    showImageModal: true, 
     githubUrl: "https://github.com/benhix/Face-Recognition",
     stack: ['Python', 'OpenCV', 'PySide6', 'TensorFlow', 'MTCNN', 'SVM'],
     technical: `
@@ -149,48 +138,47 @@ The production-ready real-time recognition system delivers impressive performanc
 The implementation demonstrates strong software engineering principles, including a well-structured and modular codebase, comprehensive dependency management, and efficient model serialization for persistence. The system successfully bridges the gap between a research-grade deep learning model and a practical, real-world application, showcasing expertise in computer vision, ML model deployment, and real-time system optimization.
     `
   },
-  /* { 
+  // ==================== Know Your Rep ====================
+  { 
     id: 5, 
-    title: "Web Scraper & Analyzer", 
-    description: "A Python tool for extracting data from websites using BeautifulSoup and Scrapy, with data analysis features.", 
-    category: "Python",
-    imageUrl: "/project-images/scraper.jpg",
-    demoUrl: "https://py-scraper.example.com",
-    githubUrl: "https://github.com/user/python-scraper",
-    stack: ['Python', 'BeautifulSoup', 'Scrapy', 'Requests', 'Pandas', 'Matplotlib'],
+    title: "Know Your Rep", 
+    description: "A web application that allows users to find out more about their local representatives including their voting history, spending, investments, and speeches.", 
+    category: "JS/TS",
+    imageUrl: "/projects/know-your-rep/profile-main.png", 
+    imageType: "fullpage",
+    showImageModal: true,
+    images: [
+      "/projects/know-your-rep/home.png",
+      "/projects/know-your-rep/profile-main.png",
+      "/projects/know-your-rep/voting.png",
+      "/projects/know-your-rep/spending.png",
+      "/projects/know-your-rep/speeches.png",
+    ],
+    demoUrl: "https://knowyourrep.com.au/",
+    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'MongoDB', 'TypeSense'],
     technical: `
-### Scraping Engine:
-Combines Scrapy for robust crawling and link extraction with BeautifulSoup for parsing HTML from specific pages. Handles various anti-scraping measures like user-agents and proxies.
+### Core Features
+- Comprehensive Politician Search System featuring multi-modal search across names, postcodes, electoral divisions, and states with real-time autocomplete and support for both House representatives and Senators.
+- Detailed Politician Profiles with tabbed interface displaying overview information, voting records and policy alignments, parliamentary spending breakdowns, and historical speech archives.
+- Advanced Data Integration combining OpenAustralia API, TheyVoteForYou API, and custom parliamentary spending databases with automated data import and validation workflows.
+- Intelligent Search Infrastructure powered by Typesense cloud search with automatic data synchronization and seamless fallback to direct API queries.
 
-### Data Processing & Analysis:
-Collected data is cleaned and structured using Pandas DataFrames. Matplotlib is used for generating basic visualizations from the scraped data.
+### Technical Architecture
+- Next.js 14 Application built with the App Router and server-side rendering, using TypeScript throughout with comprehensive type definitions and API responses.
+- Multi-Source API Integration with robust authentication middleware implementing internal secret headers and comprehensive error handling with graceful degradation.
+- Database Architecture combining MongoDB for structured spending data with Typesense for high-performance search indexing and automated ETL pipelines.
+- Authentication Framework built with Clerk providing route-level protection and secure API endpoint authentication.
 
-### Use Cases:
-Market research, price tracking, sentiment analysis from reviews, and lead generation. Ethical considerations and website T&Cs were paramount.
+### Development Excellence
+- Modular Component Architecture with clear separation between reusable components and feature-specific implementations, following Next.js 14 conventions.
+- Data Processing Pipeline including automated CSV import scripts and scheduled synchronization jobs that maintain data freshness across external APIs.
+- Performance Optimization featuring code splitting, lazy loading, and responsive design using Tailwind CSS with mobile-first architecture.
+- Production Deployment on Vercel with automated CI/CD and cron job scheduling for data synchronization.
+
+### Technical Highlights
+- Intelligent Search Fallback System that seamlessly transitions from Typesense queries to direct API calls when infrastructure is unavailable.
+- Comprehensive Data Aggregation combining spending records, voting patterns, and biographical information into unified politician profiles.
+- Real-time Synchronization featuring automated daily data updates via Vercel cron jobs with manual trigger capabilities.
     `
-  }, */
-/*   { 
-    id: 7, 
-    title: "Game Engine Core (C++)", 
-    description: "A foundational 2D game engine developed with C++ and SDL, focusing on core engine components.", 
-    category: "C++",
-    imageUrl: "/project-images/game-engine.jpg",
-    demoUrl: "https://cpp-game-engine.example.com",
-    githubUrl: "https://github.com/user/cpp-game-engine",
-    stack: ['C++', 'SDL2', 'OpenGL (optional for rendering)', 'CMake', 'Box2D (for physics)'],
-    technical: `
-### Core Systems:
-- **Rendering:** Abstracted rendering system (initially SDL_Renderer, with plans for OpenGL).
-- **Entity-Component System (ECS):** For flexible game object management.
-- **Input Handling:** Keyboard, mouse, and gamepad input.
-- **Basic Physics:** Integration with Box2D for 2D physics simulation.
-- **Scene Management:** Loading and transitioning between game scenes.
-
-### Build & Structure:
-CMake for cross-platform build management. Modular design to allow for easy extension and addition of new features.
-
-### Learning Objectives:
-Deepen understanding of game engine architecture, C++ best practices, memory management, and real-time application development.
-    `
-  }, */
+  },
 ];

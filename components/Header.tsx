@@ -72,16 +72,16 @@ const Header = () => {
               About
             </button>
             <button 
-              onClick={() => smoothScrollTo('case-studies')}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              Case Studies
-            </button>
-            <button 
               onClick={() => smoothScrollTo('projects')}
               className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
             >
               Projects
+            </button>
+            <button 
+              onClick={() => smoothScrollTo('case-studies')}
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              Case Studies
             </button>
             <button 
               onClick={() => smoothScrollTo('contact')}

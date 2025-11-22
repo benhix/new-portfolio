@@ -12,6 +12,10 @@ const TypewriterEffect = () => {
             .pauseFor(3000).deleteAll()
             .typeString('Python')
             .pauseFor(3000).deleteAll()
+            .typeString('Web')
+            .pauseFor(3000).deleteAll()
+            .typeString('Mobile')
+            .pauseFor(3000).deleteAll()
             .start()
 
         }}

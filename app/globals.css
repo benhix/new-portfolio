@@ -143,6 +143,17 @@ body {
   }
 }
 
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .theme-tooltip-container {
   background-color: hsl(var(--background) / 0.95);
   backdrop-filter: blur(4px);
