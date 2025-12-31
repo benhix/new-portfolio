@@ -56,7 +56,7 @@ This platform is a production-ready, enterprise-grade solution that handles comp
     `
   },
   // ==================== Mandarin Dictionary AI ====================
-  { 
+  /* { 
     id: 2, 
     title: "Mandarin Dictionary AI", 
     description: "A custom Mandarin dictionary and learning tool featuring AI-powered handwriting recognition and real-time pronunciation analysis.", 
@@ -112,7 +112,7 @@ The home screen provides a widget-based dashboard featuring calendar events, sho
 ### Comprehensive Feature Set & Production Architecture
 The application includes four main feature modules: Calendar (with event categories, birthdays, and reminders), Shopping (with categories, priorities, and collaborative lists), Dinner Planning (with recipe libraries and weekly meal scheduling), and Home Dashboard. The calendar supports rich event metadata including locations, attendees, and color coding. Shopping lists feature image attachments, notes, and multiple view modes. Dinner planning includes drag-and-drop weekly scheduling with proposal locking. The codebase demonstrates strong engineering with modular services, comprehensive error handling, Adelaide timezone utilities, and robust authentication flows supporting family management and user preferences.
 `
-  },
+  }, */
   // ==================== Real-Time Face Recognition ====================
   { 
     id: 4, 
