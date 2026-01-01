@@ -80,7 +80,7 @@ The core technical innovation is an intelligent, real-time search engine that si
 ### Features & Deployment
 Additional features include a comprehensive learning management system with favoriting, learning progress tracking, and category organization. The application includes loading states, confirmation modals, and error handling for a polished user experience. Successfully deployed to Vercel with MongoDB Atlas integration, demonstrating production deployment and cloud database management skills. The project solved a real-world learning challenge while showcasing advanced text processing, database optimization, and modern web development practices.
     `
-  },
+  },*/
   // ==================== Family Hub ====================
    { 
     id: 9, 
@@ -112,7 +112,7 @@ The home screen provides a widget-based dashboard featuring calendar events, sho
 ### Comprehensive Feature Set & Production Architecture
 The application includes four main feature modules: Calendar (with event categories, birthdays, and reminders), Shopping (with categories, priorities, and collaborative lists), Dinner Planning (with recipe libraries and weekly meal scheduling), and Home Dashboard. The calendar supports rich event metadata including locations, attendees, and color coding. Shopping lists feature image attachments, notes, and multiple view modes. Dinner planning includes drag-and-drop weekly scheduling with proposal locking. The codebase demonstrates strong engineering with modular services, comprehensive error handling, Adelaide timezone utilities, and robust authentication flows supporting family management and user preferences.
 `
-  }, */
+  }, 
   // ==================== Real-Time Face Recognition ====================
   { 
     id: 4, 
